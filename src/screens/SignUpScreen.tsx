@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -11,7 +11,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { Button, Image, Text } from 'react-native-elements';
+import { Button, ButtonGroup, Image, Text } from 'react-native-elements';
 import CheckBox from '@react-native-community/checkbox';
 import LinearGradient from 'react-native-linear-gradient';
 import { useForm, Controller } from 'react-hook-form';
@@ -26,15 +26,29 @@ const exampleImageUri = RNImage.resolveAssetSource(exampleImage).uri;
 type FormData = {
   email: string;
   password: string;
+  confirmPassword: string;
 };
 
-const HomeScreen = () => {
+const SignUpScreen = ({ navigation }) => {
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const { control, handleSubmit, errors } = useForm<FormData>();
 
   const onSubmit = (data: FormData) => {
     console.log(data);
     Alert.alert('Form Data ', JSON.stringify(data));
   };
+
+  const updateIndex = (index: number) => {
+    setSelectedIndex(index);
+  };
+
+  const component1 = () => (
+    <Text style={{ fontSize: 20, color: Colors.darkBlue }}>Freelancer</Text>
+  );
+  const component2 = () => (
+    <Text style={{ fontSize: 20, color: Colors.darkBlue }}>Work Provider</Text>
+  );
+  const buttons = [{ element: component1 }, { element: component2 }];
 
   return (
     <KeyboardAvoidingView
@@ -72,9 +86,36 @@ const HomeScreen = () => {
                   />
                 </View>
                 <View style={styles.sectionContainer}>
-                  <Text style={styles.sectionTitle}>
-                    Log In and get to work
+                  <Text
+                    style={{
+                      color: Colors.white,
+                      fontWeight: 'bold',
+                      fontSize: 24,
+                      textAlign: 'center',
+                      marginBottom: 10,
+                    }}>
+                    Join EnergyFreelance
                   </Text>
+                  <Text style={styles.sectionTitle}>
+                    Tell us, how you want to work?
+                  </Text>
+                  <View style={{ flex: 1, marginBottom: 20 }}>
+                    <ButtonGroup
+                      onPress={updateIndex}
+                      selectedIndex={selectedIndex}
+                      buttons={buttons}
+                      containerStyle={{
+                        height: 60,
+                        borderWidth: 0,
+                        width: '100%',
+                        marginLeft: -1,
+                      }}
+                      selectedButtonStyle={{
+                        backgroundColor: Colors.lightBlue,
+                      }}
+                      innerBorderStyle={{ color: Colors.lightBlue }}
+                    />
+                  </View>
                   <Controller
                     name="email"
                     defaultValue=""
@@ -97,6 +138,19 @@ const HomeScreen = () => {
                         {...props}
                         onChangeText={(value) => props.onChange(value)}
                         placeholder="Password"
+                        secureTextEntry={true}
+                      />
+                    )}
+                  />
+                  <Controller
+                    name="confirmPassword"
+                    defaultValue=""
+                    control={control}
+                    render={(props) => (
+                      <Input
+                        {...props}
+                        onChangeText={(value) => props.onChange(value)}
+                        placeholder="Confirm Password"
                         secureTextEntry={true}
                       />
                     )}
@@ -134,7 +188,7 @@ const HomeScreen = () => {
                       paddingVertical: 16,
                       marginBottom: 20,
                     }}
-                    title="Log In"
+                    title="Sign Up"
                   />
                   <Button
                     type="outline"
@@ -153,15 +207,32 @@ const HomeScreen = () => {
                         flex: 1,
                         flexDirection: 'row',
                         justifyContent: 'center',
+                        alignItems: 'center',
                         marginTop: 30,
                         marginBottom: 20,
                       }}>
                       <Text style={styles.sectionBottom}>
-                        New to Energy Freelance?
+                        Already a member?
                       </Text>
-                      <Text style={styles.link}>Sign Up</Text>
+                      <Button
+                        titleStyle={{
+                          color: Colors.lightGreen,
+                          textDecorationLine: 'underline',
+                        }}
+                        type={'clear'}
+                        onPress={() => navigation.navigate('SignIn')}
+                        title="Log In"
+                      />
+                      <Button
+                        titleStyle={{
+                          color: Colors.lightGreen,
+                          textDecorationLine: 'underline',
+                        }}
+                        type={'clear'}
+                        onPress={() => navigation.navigate('Steps')}
+                        title="Steps"
+                      />
                     </View>
-                    <Text style={styles.link}>Forgot your password?</Text>
                   </View>
                 </View>
               </View>
@@ -217,4 +288,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default SignUpScreen;
