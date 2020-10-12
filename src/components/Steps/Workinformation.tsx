@@ -19,40 +19,99 @@ const WorkInformation = ({ navigation }) => {
   const [newSkills, setNewSkills] = useState([]);
   const [newCertifications, setNewCertifications] = useState([]);
 
-  // const [updateWorkInformation, setUpdateWorkInformation] = useState(false);
-  // const [personalInfo, setPersonalInfo] = useState(state.personalInfo || {});
-  // const [workInformation, setWorkInformation] = useState(
-  //   state.workInformation || { workInformation: [] },
-  // );
-  //
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   if (user.type === WORK_PROVIDER) {
-  //     if (name === 'industryId') {
-  //       let ind = industries.filter((item) => item.value === value);
-  //       setPersonalInfo({
-  //         ...personalInfo,
-  //         industryName: ind[0].title,
-  //         industryId: ind[0].value,
-  //       });
-  //       return;
-  //     }
-  //   }
-  //   setPersonalInfo({ ...personalInfo, [name]: value });
-  // };
-  //
-  // useEffect(() => {
-  //   if (user.type === FREELANCER) {
-  //     if (updateWorkInformation) {
-  //       dispatch(updateWorkinformation(workInformation));
-  //       return;
-  //     }
-  //   }
-  //
-  //   return () => {
-  //     setUpdateWorkInformation(false);
-  //   };
-  // }, [workInformation]);
+  const handleNewSkill = () => {
+    setNewSkills((prevState) => [...prevState, { skillId: 1, skillName: '' }]);
+  };
+
+  const handleNewVCertification = () => {
+    setNewCertifications((prevState) => [
+      ...prevState,
+      { certId: 1, certName: '' },
+    ]);
+  };
+
+  const renderNewSkillElement = (skill, index) => (
+    <View key={index}>
+      <Text
+        style={{
+          fontSize: 14,
+          fontWeight: 'normal',
+          textAlign: 'left',
+          color: Colors.white,
+          marginBottom: 20,
+        }}>
+        Industry skill {index + 1}
+      </Text>
+      <Controller
+        name={`skill-${index}`}
+        defaultValue=""
+        control={control}
+        render={(props) => (
+          <SelectInput
+            {...props}
+            labelStyle={{ fontSize: 20 }}
+            style={{
+              flexDirection: 'row',
+              padding: 20,
+              backgroundColor: Colors.white,
+              marginBottom: 20,
+            }}
+            onValueChange={(value) => props.onChange(value)}
+            value={0}
+            options={options2}
+          />
+        )}
+      />
+    </View>
+  );
+
+  const renderCertificationElement = (cert, index) => (
+    <View key={index}>
+      <Text
+        style={{
+          fontSize: 14,
+          fontWeight: 'normal',
+          textAlign: 'left',
+          color: Colors.white,
+          marginBottom: 20,
+        }}>
+        Industry certification {index + 1}
+      </Text>
+      <Controller
+        name={`certification-${index}`}
+        defaultValue=""
+        control={control}
+        render={(props) => (
+          <SelectInput
+            {...props}
+            labelStyle={{ fontSize: 20 }}
+            style={{
+              flexDirection: 'row',
+              padding: 20,
+              backgroundColor: Colors.white,
+              marginBottom: 20,
+            }}
+            onValueChange={(value) => props.onChange(value)}
+            value={0}
+            options={options3}
+          />
+        )}
+      />
+      <Controller
+        name="membership-number"
+        defaultValue=""
+        control={control}
+        render={(props) => (
+          <Input
+            {...props}
+            onChangeText={(value) => props.onChange(value)}
+            placeholder="Membership #"
+          />
+        )}
+      />
+    </View>
+  );
+
   const options = [
     { value: 0, label: 'Primary Industry' },
     { value: 1, label: 'Banana' },
@@ -129,6 +188,7 @@ const WorkInformation = ({ navigation }) => {
                   />
                 </View>
                 <TouchableOpacity
+                  onPress={() => handleNewSkill()}
                   style={{
                     flex: 1,
                     flexDirection: 'row',
@@ -163,42 +223,12 @@ const WorkInformation = ({ navigation }) => {
                 </TouchableOpacity>
 
                 {newSkills.length > 0 &&
-                  newSkills.map((skill) => (
-                    <View>
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          fontWeight: 'normal',
-                          textAlign: 'left',
-                          color: Colors.white,
-                          marginBottom: 20,
-                        }}>
-                        Industry skill 1
-                      </Text>
-                      <Controller
-                        name="skill"
-                        defaultValue=""
-                        control={control}
-                        render={(props) => (
-                          <SelectInput
-                            {...props}
-                            labelStyle={{ fontSize: 20 }}
-                            style={{
-                              flexDirection: 'row',
-                              padding: 20,
-                              backgroundColor: Colors.white,
-                              marginBottom: 20,
-                            }}
-                            onValueChange={(value) => props.onChange(value)}
-                            value={0}
-                            options={options2}
-                          />
-                        )}
-                      />
-                    </View>
-                  ))}
+                  newSkills.map((skill, index) =>
+                    renderNewSkillElement(skill, index),
+                  )}
 
                 <TouchableOpacity
+                  onPress={() => handleNewVCertification()}
                   style={{
                     flex: 1,
                     flexDirection: 'row',
@@ -232,52 +262,9 @@ const WorkInformation = ({ navigation }) => {
                   </Text>
                 </TouchableOpacity>
                 {newCertifications.length > 0 &&
-                  newCertifications.map((cert) => (
-                    <View>
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          fontWeight: 'normal',
-                          textAlign: 'left',
-                          color: Colors.white,
-                          marginBottom: 20,
-                        }}>
-                        Industry certification 1
-                      </Text>
-                      <Controller
-                        name="certification"
-                        defaultValue=""
-                        control={control}
-                        render={(props) => (
-                          <SelectInput
-                            {...props}
-                            labelStyle={{ fontSize: 20 }}
-                            style={{
-                              flexDirection: 'row',
-                              padding: 20,
-                              backgroundColor: Colors.white,
-                              marginBottom: 20,
-                            }}
-                            onValueChange={(value) => props.onChange(value)}
-                            value={0}
-                            options={options3}
-                          />
-                        )}
-                      />
-                      <Controller
-                        name="membership-number"
-                        defaultValue=""
-                        control={control}
-                        render={(props) => (
-                          <Input
-                            {...props}
-                            onChangeText={(value) => props.onChange(value)}
-                            placeholder="Membership #"
-                          />
-                        )}
-                      />
-                    </View>
-                  ))}
+                  newCertifications.map((cert, index) =>
+                    renderCertificationElement(cert, index),
+                  )}
 
                 <View
                   style={{
