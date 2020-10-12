@@ -7,14 +7,14 @@ import {
   View,
   ActivityIndicator,
 } from 'react-native';
+import Colors from '../../constants/colors';
 import LinearGradient from 'react-native-linear-gradient';
 import { Button, Image, Text } from 'react-native-elements';
 import { Controller, useForm } from 'react-hook-form';
 import SelectInput from 'react-native-select-input-ios';
 
-import Colors from '../../constants/colors';
 import Input from '../Input';
-import Step from '../Step';
+// import Step from '../step';
 
 // @ts-ignore
 import userAvatarPlaceholder from '../../assets/User.png';
@@ -30,7 +30,7 @@ type FormData = {
   industry: string;
 };
 
-const PersonalInformation = ({
+const Experience = ({
   navigation,
   // state,
   // stepActions,
@@ -90,7 +90,7 @@ const PersonalInformation = ({
   ];
 
   return (
-    <Step>
+    <View style={{ flex: 1, backgroundColor: Colors.midLightGray }}>
       <LinearGradient
         start={{ x: 0.4, y: 0.3 }}
         end={{ x: 1, y: 1 }}
@@ -104,27 +104,9 @@ const PersonalInformation = ({
             <View style={styles.body}>
               <View style={{ marginTop: 60 }}>
                 <Text style={styles.sectionTitle}>
-                  To complete your registration we need more information. Click
-                  next when completed.
+                  Tell us about some of your work history, your education and
+                  your general rate.
                 </Text>
-              </View>
-              <View
-                style={{
-                  marginTop: 10,
-                  marginBottom: 10,
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Image
-                  source={{ uri: userAvatarPlaceholderURI }}
-                  style={{
-                    width: 160,
-                    height: 160,
-                    resizeMode: 'cover',
-                  }}
-                  PlaceholderContent={<ActivityIndicator />}
-                />
               </View>
               <View style={styles.sectionContainer}>
                 <Text
@@ -135,117 +117,99 @@ const PersonalInformation = ({
                     color: Colors.white,
                     marginBottom: 20,
                   }}>
-                  Personal Information
+                  Experience & General rate
                 </Text>
-                <Controller
-                  name="firstName"
-                  defaultValue=""
-                  control={control}
-                  render={(props) => (
-                    <Input
-                      {...props}
-                      onChangeText={(value) => props.onChange(value)}
-                      placeholder="First Name"
-                    />
-                  )}
+                <View style={{ marginTop: 20 }}>
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      fontWeight: 'normal',
+                      textAlign: 'left',
+                      color: Colors.white,
+                      marginBottom: 20,
+                    }}>
+                    Work history
+                  </Text>
+                  <Button
+                    type="outline"
+                    titleStyle={{ fontSize: 20, color: Colors.lightGreen }}
+                    // onPress={() => navigation.navigate('WorkInformation')}
+                    buttonStyle={{
+                      borderColor: Colors.lightGreen,
+                      borderWidth: 2,
+                      paddingVertical: 16,
+                      marginBottom: 20,
+                    }}
+                    title="Connect to Linkedin profile"
+                  />
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      fontWeight: 'normal',
+                      textAlign: 'center',
+                      color: Colors.white,
+                      marginBottom: 20,
+                    }}>
+                    Or click here to enter manually.
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    width: '100%',
+                    height: 2,
+                    backgroundColor: Colors.white,
+                    marginTop: 20,
+                    marginBottom: 40,
+                  }}
                 />
-                <Controller
-                  name="lastName"
-                  defaultValue=""
-                  control={control}
-                  render={(props) => (
-                    <Input
-                      {...props}
-                      onChangeText={(value) => props.onChange(value)}
-                      placeholder="Last Name"
-                    />
-                  )}
-                />
-                <Controller
-                  name="phoneNumber"
-                  defaultValue=""
-                  control={control}
-                  render={(props) => (
-                    <Input
-                      {...props}
-                      onChangeText={(value) => props.onChange(value)}
-                      placeholder="Phone Number"
-                    />
-                  )}
-                />
-                <Controller
-                  name="industry"
-                  defaultValue=""
-                  control={control}
-                  render={(props) => (
-                    <SelectInput
-                      {...props}
-                      labelStyle={{ fontSize: 20 }}
-                      style={{
-                        flexDirection: 'row',
-                        padding: 20,
-                        backgroundColor: Colors.white,
-                        marginBottom: 20,
-                      }}
-                      onValueChange={(value) => props.onChange(value)}
-                      value={0}
-                      options={options}
-                    />
-                  )}
-                />
-                <Controller
-                  name="description"
-                  defaultValue=""
-                  control={control}
-                  render={(props) => (
-                    <SelectInput
-                      {...props}
-                      labelStyle={{ fontSize: 20 }}
-                      style={{
-                        flexDirection: 'row',
-                        padding: 20,
-                        backgroundColor: Colors.white,
-                        marginBottom: 20,
-                      }}
-                      onValueChange={(value) => props.onChange(value)}
-                      value={0}
-                      options={options2}
-                    />
-                  )}
-                />
-                <Controller
-                  name="businessName"
-                  defaultValue=""
-                  control={control}
-                  render={(props) => (
-                    <Input
-                      {...props}
-                      onChangeText={(value) => props.onChange(value)}
-                      placeholder="Business Name (Optional)"
-                    />
-                  )}
-                />
-                <Controller
-                  name="experience"
-                  defaultValue=""
-                  control={control}
-                  render={(props) => (
-                    <SelectInput
-                      {...props}
-                      labelStyle={{ fontSize: 20 }}
-                      style={{
-                        flexDirection: 'row',
-                        padding: 20,
-                        backgroundColor: Colors.white,
-                        marginBottom: 20,
-                      }}
-                      onValueChange={(value) => props.onChange(value)}
-                      value={0}
-                      options={options3}
-                    />
-                  )}
-                />
+                <View style={{ marginBottom: 40 }}>
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                      textAlign: 'left',
+                      color: Colors.white,
+                      marginBottom: 20,
+                    }}>
+                    General rate
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      fontWeight: 'normal',
+                      textAlign: 'left',
+                      color: Colors.white,
+                      marginTop: 20,
+                      marginBottom: 20,
+                    }}>
+                    General hourly rate
+                  </Text>
+                  <Controller
+                    name="generalRate"
+                    defaultValue=""
+                    control={control}
+                    render={(props) => (
+                      <Input
+                        {...props}
+                        onChangeText={(value) => props.onChange(value)}
+                        placeholder="Rate"
+                      />
+                    )}
+                  />
+                </View>
 
+                <Button
+                  type="outline"
+                  titleStyle={{ fontSize: 20, color: Colors.lightGreen }}
+                  onPress={() => navigation.navigate('WorkInformation')}
+                  buttonStyle={{
+                    borderColor: Colors.lightGreen,
+                    borderWidth: 2,
+                    paddingVertical: 16,
+                    marginBottom: 20,
+                  }}
+                  title="Prev"
+                />
                 <Button
                   type="outline"
                   // onPress={() => navigation.navigate('WorkInformation')}
@@ -259,7 +223,7 @@ const PersonalInformation = ({
                   title="Skip"
                 />
                 <Button
-                  onPress={() => navigation.navigate('WorkInformation')}
+                  onPress={() => navigation.navigate('ThankYou')}
                   titleStyle={{ fontSize: 20, color: Colors.darkBlue }}
                   buttonStyle={{
                     backgroundColor: Colors.lightGreen,
@@ -273,7 +237,7 @@ const PersonalInformation = ({
           </ScrollView>
         </SafeAreaView>
       </LinearGradient>
-    </Step>
+    </View>
   );
 };
 
@@ -321,4 +285,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PersonalInformation;
+export default Experience;

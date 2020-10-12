@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Alert, KeyboardAvoidingView, Platform } from 'react-native';
-import { useForm } from 'react-hook-form';
 
 import PersonalInformation from '../components/Steps/PersonalInformation';
+import WorkInformation from '../components/Steps/Workinformation';
 
 type FormData = {
   email: string;
@@ -11,18 +11,29 @@ type FormData = {
 };
 
 const StepsScreen = ({ navigation }) => {
-  const { control, handleSubmit, errors } = useForm<FormData>();
+  const [step, setStep] = useState(1);
+  // const { control, handleSubmit, errors } = useForm<FormData>();
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
-    Alert.alert('Form Data ', JSON.stringify(data));
+  // const onSubmit = (data: FormData) => {
+  //   console.log(data);
+  //   Alert.alert('Form Data ', JSON.stringify(data));
+  // };
+
+  const stepToRender = () => {
+    switch (step) {
+      case 1:
+        return <PersonalInformation />;
+
+      case 2:
+        return <WorkInformation />;
+    }
   };
 
   return (
     <KeyboardAvoidingView
       style={{ flexGrow: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <PersonalInformation />
+      {stepToRender()}
     </KeyboardAvoidingView>
   );
 };

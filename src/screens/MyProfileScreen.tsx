@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -11,7 +11,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { Button, ButtonGroup, Image, Text } from 'react-native-elements';
+import { Button, Image, Text } from 'react-native-elements';
 import CheckBox from '@react-native-community/checkbox';
 import LinearGradient from 'react-native-linear-gradient';
 import { useForm, Controller } from 'react-hook-form';
@@ -26,29 +26,16 @@ const exampleImageUri = RNImage.resolveAssetSource(exampleImage).uri;
 type FormData = {
   email: string;
   password: string;
-  confirmPassword: string;
+  rememberMe: boolean;
 };
 
-const SignUpScreen = ({ navigation }) => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
+const MyProfileScreen = ({ navigation }) => {
   const { control, handleSubmit, errors } = useForm<FormData>();
 
   const onSubmit = (data: FormData) => {
     console.log(data);
     Alert.alert('Form Data ', JSON.stringify(data));
   };
-
-  const updateIndex = (index: number) => {
-    setSelectedIndex(index);
-  };
-
-  const component1 = () => (
-    <Text style={{ fontSize: 20, color: Colors.darkBlue }}>Get Hired</Text>
-  );
-  const component2 = () => (
-    <Text style={{ fontSize: 20, color: Colors.darkBlue }}>Hire</Text>
-  );
-  const buttons = [{ element: component1 }, { element: component2 }];
 
   return (
     <KeyboardAvoidingView
@@ -86,36 +73,9 @@ const SignUpScreen = ({ navigation }) => {
                   />
                 </View>
                 <View style={styles.sectionContainer}>
-                  <Text
-                    style={{
-                      color: Colors.white,
-                      fontWeight: 'bold',
-                      fontSize: 24,
-                      textAlign: 'center',
-                      marginBottom: 10,
-                    }}>
-                    Join EnergyFreelance
-                  </Text>
                   <Text style={styles.sectionTitle}>
-                    Tell us, how you want to work?
+                    Log In and get to work
                   </Text>
-                  <View style={{ flex: 1, marginBottom: 20 }}>
-                    <ButtonGroup
-                      onPress={updateIndex}
-                      selectedIndex={selectedIndex}
-                      buttons={buttons}
-                      containerStyle={{
-                        height: 60,
-                        borderWidth: 0,
-                        width: '100%',
-                        marginLeft: -1,
-                      }}
-                      selectedButtonStyle={{
-                        backgroundColor: Colors.lightBlue,
-                      }}
-                      innerBorderStyle={{ color: Colors.lightBlue }}
-                    />
-                  </View>
                   <Controller
                     name="email"
                     defaultValue=""
@@ -142,20 +102,31 @@ const SignUpScreen = ({ navigation }) => {
                       />
                     )}
                   />
-                  <Controller
-                    name="confirmPassword"
-                    defaultValue=""
-                    control={control}
-                    render={(props) => (
-                      <Input
-                        {...props}
-                        onChangeText={(value) => props.onChange(value)}
-                        placeholder="Confirm Password"
-                        secureTextEntry={true}
-                      />
-                    )}
-                  />
-
+                  <View
+                    style={{
+                      flex: 1,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginTop: 10,
+                      marginBottom: 30,
+                    }}>
+                    <CheckBox
+                      disabled={false}
+                      boxType={'square'}
+                      onCheckColor={Colors.lightGreen}
+                      tintColor={Colors.white}
+                      onTintColor={Colors.lightGreen}
+                      value={false}
+                    />
+                    <Text
+                      style={{
+                        fontSize: 20,
+                        color: Colors.white,
+                        marginLeft: 20,
+                      }}>
+                      Remember Me
+                    </Text>
+                  </View>
                   <Button
                     onPress={handleSubmit(onSubmit)}
                     titleStyle={{ fontSize: 20, color: Colors.darkBlue }}
@@ -164,7 +135,7 @@ const SignUpScreen = ({ navigation }) => {
                       paddingVertical: 16,
                       marginBottom: 20,
                     }}
-                    title="Sign Up"
+                    title="Log In"
                   />
                   <Button
                     type="outline"
@@ -185,10 +156,9 @@ const SignUpScreen = ({ navigation }) => {
                         justifyContent: 'center',
                         alignItems: 'center',
                         marginTop: 30,
-                        marginBottom: 20,
                       }}>
                       <Text style={styles.sectionBottom}>
-                        Already a member?
+                        New to Energy Freelance?
                       </Text>
                       <Button
                         titleStyle={{
@@ -196,19 +166,19 @@ const SignUpScreen = ({ navigation }) => {
                           textDecorationLine: 'underline',
                         }}
                         type={'clear'}
-                        onPress={() => navigation.navigate('SignIn')}
-                        title="Log In"
-                      />
-                      <Button
-                        titleStyle={{
-                          color: Colors.lightGreen,
-                          textDecorationLine: 'underline',
-                        }}
-                        type={'clear'}
-                        onPress={() => navigation.navigate('Steps')}
-                        title="Steps"
+                        onPress={() => navigation.navigate('SignUp')}
+                        title="Sign Up"
                       />
                     </View>
+                    <Button
+                      titleStyle={{
+                        color: Colors.lightGreen,
+                        textDecorationLine: 'underline',
+                      }}
+                      type={'clear'}
+                      onPress={() => navigation.navigate('PasswordForgot')}
+                      title="Forgot your password?"
+                    />
                   </View>
                 </View>
               </View>
@@ -264,4 +234,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUpScreen;
+export default MyProfileScreen;

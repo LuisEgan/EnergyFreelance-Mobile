@@ -161,7 +161,6 @@
 				C094C2E1019EE6063DF23433 /* Pods-EnergyFreelance_Mobile-tvOSTests.debug.xcconfig */,
 				22BFB75F4E57DD7C8D6F8341 /* Pods-EnergyFreelance_Mobile-tvOSTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};

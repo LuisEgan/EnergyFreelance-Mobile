@@ -5,11 +5,43 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
-import StepsScreen from './screens/StepsScreen';
+import PersonalInformation from './components/Steps/PersonalInformation';
+import WorkInformation from './components/Steps/Workinformation';
+import Experience from './components/Steps/Experience';
+import ThankYou from './components/Steps/ThankYou';
+import MyProfileScreen from './screens/MyProfileScreen';
 
 declare const global: { HermesInternal: null | {} };
 
 const Stack = createStackNavigator();
+const stepPagesStack = createStackNavigator();
+
+const stepPages = () => (
+  <stepPagesStack.Navigator
+    initialRouteName="PersonalInformation"
+    headerMode={'none'}>
+    <stepPagesStack.Screen
+      name="PersonalInformation"
+      component={PersonalInformation}
+      options={{ title: 'Personal Information' }}
+    />
+    <stepPagesStack.Screen
+      name="WorkInformation"
+      component={WorkInformation}
+      options={{ title: 'Work Information' }}
+    />
+    <stepPagesStack.Screen
+      name="Experience"
+      component={Experience}
+      options={{ title: 'Experience' }}
+    />
+    <stepPagesStack.Screen
+      name="ThankYou"
+      component={ThankYou}
+      options={{ title: 'Thank You' }}
+    />
+  </stepPagesStack.Navigator>
+);
 
 const App = () => {
   return (
@@ -28,8 +60,13 @@ const App = () => {
           />
           <Stack.Screen
             name="Steps"
-            component={StepsScreen}
+            component={stepPages}
             options={{ title: 'Steps' }}
+          />
+          <Stack.Screen
+            name="MyProfile"
+            component={MyProfileScreen}
+            options={{ title: 'My Profile' }}
           />
         </Stack.Navigator>
       </ThemeProvider>
