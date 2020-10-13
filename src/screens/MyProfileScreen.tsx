@@ -78,12 +78,16 @@ const MyProfileScreen = ({ navigation }) => {
                 }}>
                 My account
               </Text>
-              <View>
-                <ScrollView
-                  horizontal
+              <ScrollView
+                horizontal
+                style={{
+                  paddingVertical: 24,
+                }}>
+                <View
                   style={{
-                    paddingVertical: 24,
-                    paddingHorizontal: 24,
+                    flex: 1,
+                    flexDirection: 'row',
+                    marginHorizontal: 24,
                   }}>
                   <TouchableOpacity>
                     <Text
@@ -121,8 +125,8 @@ const MyProfileScreen = ({ navigation }) => {
                       Manage Payments
                     </Text>
                   </TouchableOpacity>
-                </ScrollView>
-              </View>
+                </View>
+              </ScrollView>
               <Text
                 style={{
                   fontSize: 24,
