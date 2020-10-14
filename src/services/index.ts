@@ -19,7 +19,7 @@ const API_GET_PUBLIC_PROJECTS =
 const API_APPLY_PROJECT = `${ENV_API}/ApplyProject`;
 const API_GET_APPLICATIONS = `${ENV_API}/GetApplicationOffers`;
 
-export function createUser(action) {
+export function createUser(action: any) {
   const { type } = action.payload;
   const url = API_URL_CREATE_USERS;
 

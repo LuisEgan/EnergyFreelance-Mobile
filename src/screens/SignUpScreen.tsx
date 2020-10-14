@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   SafeAreaView,
   ScrollView,
@@ -12,10 +13,10 @@ import {
   Platform,
 } from 'react-native';
 import { Button, ButtonGroup, Image, Text } from 'react-native-elements';
-import CheckBox from '@react-native-community/checkbox';
 import LinearGradient from 'react-native-linear-gradient';
 import { useForm, Controller } from 'react-hook-form';
 
+import { startAsyncCall, fetchUser } from '../store/actions';
 import Colors from '../constants/colors';
 import Input from '../components/Input';
 
@@ -24,18 +25,29 @@ import exampleImage from '../assets/Energy_Freelance_vertical_white.png';
 const exampleImageUri = RNImage.resolveAssetSource(exampleImage).uri;
 
 type FormData = {
+  type: number;
   email: string;
   password: string;
   confirmPassword: string;
 };
 
 const SignUpScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const { control, handleSubmit, errors } = useForm<FormData>();
 
   const onSubmit = (data: FormData) => {
-    console.log(data);
-    Alert.alert('Form Data ', JSON.stringify(data));
+    let userType = selectedIndex + 1;
+    let newUser = {
+      email: data.email,
+      type: userType,
+      password: data.password,
+      status: '0',
+      isgoogle: 'False',
+    };
+
+    dispatch(startAsyncCall());
+    dispatch(fetchUser(newUser));
   };
 
   const updateIndex = (index: number) => {
