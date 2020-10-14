@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  SafeAreaView,
   ScrollView,
-  StatusBar,
   View,
   ActivityIndicator,
   Image as RNImage,
   StyleSheet,
-  Alert,
-  KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Button, ButtonGroup, Image, Text } from 'react-native-elements';
 import LinearGradient from 'react-native-linear-gradient';
 import { useForm, Controller } from 'react-hook-form';
@@ -31,6 +28,14 @@ type FormData = {
   confirmPassword: string;
 };
 
+type UserData = {
+  type: number;
+  email: string;
+  password: string;
+  status: string;
+  isgoogle: string;
+};
+
 const SignUpScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -38,14 +43,14 @@ const SignUpScreen = ({ navigation }) => {
 
   const onSubmit = (data: FormData) => {
     let userType = selectedIndex + 1;
-    let newUser = {
+    let newUser: UserData = {
       email: data.email,
       type: userType,
       password: data.password,
       status: '0',
       isgoogle: 'False',
     };
-
+    // {"type":1,"email":"admin@exampleadminadmin.com","password":"Password!1","status":"0","isgoogle":"False"}
     dispatch(startAsyncCall());
     dispatch(fetchUser(newUser));
   };
@@ -63,172 +68,161 @@ const SignUpScreen = ({ navigation }) => {
   const buttons = [{ element: component1 }, { element: component2 }];
 
   return (
-    <KeyboardAvoidingView
-      style={{ flexGrow: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <View style={{ flex: 1, backgroundColor: Colors.midLightGray }}>
-        <LinearGradient
-          start={{ x: 0.4, y: 0.3 }}
-          end={{ x: 1, y: 1 }}
-          locations={[0.2, 0.8]}
-          colors={['#175d8a', '#3ed7f1']}
-          style={styles.linearGradient}>
-          <StatusBar barStyle="dark-content" />
-          <SafeAreaView>
-            <ScrollView
-              contentInsetAdjustmentBehavior="automatic"
-              style={styles.scrollView}>
-              <View style={styles.body}>
+    <LinearGradient
+      start={{ x: 0.4, y: 0.3 }}
+      end={{ x: 1, y: 1 }}
+      locations={[0.2, 0.8]}
+      colors={['#175d8a', '#3ed7f1']}
+      style={styles.linearGradient}>
+      <ScrollView style={styles.scrollView}>
+        <KeyboardAwareScrollView style={{ flex: 1, flexGrow: 1 }}>
+          <View style={styles.body}>
+            <View
+              style={{
+                marginTop: 60,
+                marginBottom: 30,
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Image
+                source={{ uri: exampleImageUri }}
+                style={{
+                  width: 300,
+                  height: 100,
+                  resizeMode: 'contain',
+                }}
+                PlaceholderContent={<ActivityIndicator />}
+              />
+            </View>
+            <View style={styles.sectionContainer}>
+              <Text
+                style={{
+                  color: Colors.white,
+                  fontWeight: 'bold',
+                  fontSize: 24,
+                  textAlign: 'center',
+                  marginBottom: 10,
+                }}>
+                Join EnergyFreelance
+              </Text>
+              <Text style={styles.sectionTitle}>
+                Tell us, how you want to work?
+              </Text>
+              <View style={{ flex: 1, marginBottom: 20 }}>
+                <ButtonGroup
+                  onPress={updateIndex}
+                  selectedIndex={selectedIndex}
+                  buttons={buttons}
+                  containerStyle={{
+                    height: 60,
+                    borderWidth: 0,
+                    width: '100%',
+                    marginLeft: -1,
+                  }}
+                  selectedButtonStyle={{
+                    backgroundColor: Colors.lightBlue,
+                  }}
+                  innerBorderStyle={{ color: Colors.lightBlue }}
+                />
+              </View>
+              <Controller
+                name="email"
+                defaultValue=""
+                control={control}
+                render={(props) => (
+                  <Input
+                    {...props}
+                    onChangeText={(value) => props.onChange(value)}
+                    placeholder="Email Address"
+                    keyboardType={'email-address'}
+                  />
+                )}
+              />
+              <Controller
+                name="password"
+                defaultValue=""
+                control={control}
+                render={(props) => (
+                  <Input
+                    {...props}
+                    onChangeText={(value) => props.onChange(value)}
+                    placeholder="Password"
+                    secureTextEntry={true}
+                  />
+                )}
+              />
+              <Controller
+                name="confirmPassword"
+                defaultValue=""
+                control={control}
+                render={(props) => (
+                  <Input
+                    {...props}
+                    onChangeText={(value) => props.onChange(value)}
+                    placeholder="Confirm Password"
+                    secureTextEntry={true}
+                  />
+                )}
+              />
+
+              <Button
+                onPress={handleSubmit(onSubmit)}
+                titleStyle={{ fontSize: 20, color: Colors.darkBlue }}
+                buttonStyle={{
+                  backgroundColor: Colors.lightGreen,
+                  paddingVertical: 16,
+                  marginBottom: 20,
+                }}
+                title="Sign Up"
+              />
+              <Button
+                type="outline"
+                onPress={handleSubmit(onSubmit)}
+                titleStyle={{ fontSize: 20, color: Colors.lightGreen }}
+                buttonStyle={{
+                  borderColor: Colors.lightGreen,
+                  borderWidth: 2,
+                  paddingVertical: 16,
+                }}
+                title="or continue with Gmail"
+              />
+              <View style={{ flex: 1 }}>
                 <View
                   style={{
-                    marginTop: 60,
-                    marginBottom: 30,
                     flex: 1,
+                    flexDirection: 'row',
                     justifyContent: 'center',
                     alignItems: 'center',
+                    marginTop: 30,
+                    marginBottom: 20,
                   }}>
-                  <Image
-                    source={{ uri: exampleImageUri }}
-                    style={{
-                      width: 300,
-                      height: 100,
-                      resizeMode: 'contain',
-                    }}
-                    PlaceholderContent={<ActivityIndicator />}
-                  />
-                </View>
-                <View style={styles.sectionContainer}>
-                  <Text
-                    style={{
-                      color: Colors.white,
-                      fontWeight: 'bold',
-                      fontSize: 24,
-                      textAlign: 'center',
-                      marginBottom: 10,
-                    }}>
-                    Join EnergyFreelance
-                  </Text>
-                  <Text style={styles.sectionTitle}>
-                    Tell us, how you want to work?
-                  </Text>
-                  <View style={{ flex: 1, marginBottom: 20 }}>
-                    <ButtonGroup
-                      onPress={updateIndex}
-                      selectedIndex={selectedIndex}
-                      buttons={buttons}
-                      containerStyle={{
-                        height: 60,
-                        borderWidth: 0,
-                        width: '100%',
-                        marginLeft: -1,
-                      }}
-                      selectedButtonStyle={{
-                        backgroundColor: Colors.lightBlue,
-                      }}
-                      innerBorderStyle={{ color: Colors.lightBlue }}
-                    />
-                  </View>
-                  <Controller
-                    name="email"
-                    defaultValue=""
-                    control={control}
-                    render={(props) => (
-                      <Input
-                        {...props}
-                        onChangeText={(value) => props.onChange(value)}
-                        placeholder="Email Address"
-                        keyboardType={'email-address'}
-                      />
-                    )}
-                  />
-                  <Controller
-                    name="password"
-                    defaultValue=""
-                    control={control}
-                    render={(props) => (
-                      <Input
-                        {...props}
-                        onChangeText={(value) => props.onChange(value)}
-                        placeholder="Password"
-                        secureTextEntry={true}
-                      />
-                    )}
-                  />
-                  <Controller
-                    name="confirmPassword"
-                    defaultValue=""
-                    control={control}
-                    render={(props) => (
-                      <Input
-                        {...props}
-                        onChangeText={(value) => props.onChange(value)}
-                        placeholder="Confirm Password"
-                        secureTextEntry={true}
-                      />
-                    )}
-                  />
-
+                  <Text style={styles.sectionBottom}>Already a member?</Text>
                   <Button
-                    onPress={handleSubmit(onSubmit)}
-                    titleStyle={{ fontSize: 20, color: Colors.darkBlue }}
-                    buttonStyle={{
-                      backgroundColor: Colors.lightGreen,
-                      paddingVertical: 16,
-                      marginBottom: 20,
+                    titleStyle={{
+                      color: Colors.lightGreen,
+                      textDecorationLine: 'underline',
                     }}
-                    title="Sign Up"
+                    type={'clear'}
+                    onPress={() => navigation.navigate('SignIn')}
+                    title="Log In"
                   />
                   <Button
-                    type="outline"
-                    onPress={handleSubmit(onSubmit)}
-                    titleStyle={{ fontSize: 20, color: Colors.lightGreen }}
-                    buttonStyle={{
-                      borderColor: Colors.lightGreen,
-                      borderWidth: 2,
-                      paddingVertical: 16,
+                    titleStyle={{
+                      color: Colors.lightGreen,
+                      textDecorationLine: 'underline',
                     }}
-                    title="or continue with Gmail"
+                    type={'clear'}
+                    onPress={() => navigation.navigate('Steps')}
+                    title="Steps"
                   />
-                  <View style={{ flex: 1 }}>
-                    <View
-                      style={{
-                        flex: 1,
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginTop: 30,
-                        marginBottom: 20,
-                      }}>
-                      <Text style={styles.sectionBottom}>
-                        Already a member?
-                      </Text>
-                      <Button
-                        titleStyle={{
-                          color: Colors.lightGreen,
-                          textDecorationLine: 'underline',
-                        }}
-                        type={'clear'}
-                        onPress={() => navigation.navigate('SignIn')}
-                        title="Log In"
-                      />
-                      <Button
-                        titleStyle={{
-                          color: Colors.lightGreen,
-                          textDecorationLine: 'underline',
-                        }}
-                        type={'clear'}
-                        onPress={() => navigation.navigate('Steps')}
-                        title="Steps"
-                      />
-                    </View>
-                  </View>
                 </View>
               </View>
-            </ScrollView>
-          </SafeAreaView>
-        </LinearGradient>
-      </View>
-    </KeyboardAvoidingView>
+            </View>
+          </View>
+        </KeyboardAwareScrollView>
+      </ScrollView>
+    </LinearGradient>
   );
 };
 
