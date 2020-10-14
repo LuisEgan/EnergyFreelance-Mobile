@@ -1,7 +1,10 @@
 import React from 'react';
+import { Provider } from 'react-redux';
+import { useStore } from './store/store';
 import { NavigationContainer } from '@react-navigation/native';
 import { ThemeProvider } from 'react-native-elements';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
@@ -13,6 +16,7 @@ import MyProfileScreen from './screens/MyProfileScreen';
 
 declare const global: { HermesInternal: null | {} };
 
+const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 const stepPagesStack = createStackNavigator();
 
@@ -43,34 +47,46 @@ const stepPages = () => (
   </stepPagesStack.Navigator>
 );
 
-const App = () => {
+const DrawerNavigator = () => {
   return (
-    <NavigationContainer>
-      <ThemeProvider>
-        <Stack.Navigator initialRouteName="SignIn" headerMode={'none'}>
-          <Stack.Screen
-            name="SignIn"
-            component={SignInScreen}
-            options={{ title: 'Sign In' }}
-          />
-          <Stack.Screen
-            name="SignUp"
-            component={SignUpScreen}
-            options={{ title: 'Sign In' }}
-          />
-          <Stack.Screen
-            name="Steps"
-            component={stepPages}
-            options={{ title: 'Steps' }}
-          />
-          <Stack.Screen
-            name="MyProfile"
-            component={MyProfileScreen}
-            options={{ title: 'My Profile' }}
-          />
-        </Stack.Navigator>
-      </ThemeProvider>
-    </NavigationContainer>
+    <Drawer.Navigator initialRouteName="MyProfile">
+      <Drawer.Screen name="MyProfile" component={MyProfileScreen} />
+    </Drawer.Navigator>
+  );
+};
+
+const MainStackNavigator = () => (
+  <Stack.Navigator initialRouteName="SignIn" headerMode={'none'}>
+    <Stack.Screen
+      name="SignIn"
+      component={SignInScreen}
+      options={{ title: 'Sign In' }}
+    />
+    <Stack.Screen
+      name="SignUp"
+      component={SignUpScreen}
+      options={{ title: 'Sign In' }}
+    />
+    <Stack.Screen
+      name="Steps"
+      component={stepPages}
+      options={{ title: 'Steps' }}
+    />
+    <Stack.Screen name="MyProfile" component={DrawerNavigator} />
+  </Stack.Navigator>
+);
+
+const App = () => {
+  const store = useStore({});
+
+  return (
+    <Provider store={store}>
+      <NavigationContainer>
+        <ThemeProvider>
+          <MainStackNavigator />
+        </ThemeProvider>
+      </NavigationContainer>
+    </Provider>
   );
 };
 
