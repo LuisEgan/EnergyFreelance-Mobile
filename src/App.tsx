@@ -13,6 +13,7 @@ import WorkInformation from './components/Steps/Workinformation';
 import Experience from './components/Steps/Experience';
 import ThankYou from './components/Steps/ThankYou';
 import MyProfileScreen from './screens/MyProfileScreen';
+import screens from './constants/screens';
 
 declare const global: { HermesInternal: null | {} };
 
@@ -22,25 +23,25 @@ const stepPagesStack = createStackNavigator();
 
 const stepPages = () => (
   <stepPagesStack.Navigator
-    initialRouteName="PersonalInformation"
+    initialRouteName={screens.steps.PersonalInformation}
     headerMode={'none'}>
     <stepPagesStack.Screen
-      name="PersonalInformation"
+      name={screens.steps.PersonalInformation}
       component={PersonalInformation}
       options={{ title: 'Personal Information' }}
     />
     <stepPagesStack.Screen
-      name="WorkInformation"
+      name={screens.steps.WorkInformation}
       component={WorkInformation}
       options={{ title: 'Work Information' }}
     />
     <stepPagesStack.Screen
-      name="Experience"
+      name={screens.steps.Experience}
       component={Experience}
       options={{ title: 'Experience' }}
     />
     <stepPagesStack.Screen
-      name="ThankYou"
+      name={screens.steps.ThankYou}
       component={ThankYou}
       options={{ title: 'Thank You' }}
     />
@@ -49,30 +50,33 @@ const stepPages = () => (
 
 const DrawerNavigator = () => {
   return (
-    <Drawer.Navigator initialRouteName="MyProfile">
-      <Drawer.Screen name="MyProfile" component={MyProfileScreen} />
+    <Drawer.Navigator initialRouteName={screens.main.MyProfile}>
+      <Drawer.Screen
+        name={screens.main.MyProfile}
+        component={MyProfileScreen}
+      />
     </Drawer.Navigator>
   );
 };
 
 const MainStackNavigator = () => (
-  <Stack.Navigator initialRouteName="SignIn" headerMode={'none'}>
+  <Stack.Navigator initialRouteName={screens.main.SignIn} headerMode={'none'}>
     <Stack.Screen
-      name="SignIn"
+      name={screens.main.SignIn}
       component={SignInScreen}
       options={{ title: 'Sign In' }}
     />
     <Stack.Screen
-      name="SignUp"
+      name={screens.main.SignUp}
       component={SignUpScreen}
       options={{ title: 'Sign In' }}
     />
     <Stack.Screen
-      name="Steps"
+      name={screens.main.Steps}
       component={stepPages}
       options={{ title: 'Steps' }}
     />
-    <Stack.Screen name="MyProfile" component={DrawerNavigator} />
+    <Stack.Screen name={screens.main.MyProfile} component={DrawerNavigator} />
   </Stack.Navigator>
 );
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -11,8 +11,7 @@ import {
   Platform,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { Button, Image, Text } from 'react-native-elements';
-import CheckBox from '@react-native-community/checkbox';
+import { Button, Image, Text, CheckBox } from 'react-native-elements';
 import LinearGradient from 'react-native-linear-gradient';
 import { useForm, Controller } from 'react-hook-form';
 
@@ -21,6 +20,9 @@ import Input from '../components/Input';
 
 // @ts-ignore
 import exampleImage from '../assets/Energy_Freelance_vertical_white.png';
+import api from '../api';
+import { useNavigation } from '@react-navigation/native';
+import screens from '../constants/screens';
 const exampleImageUri = RNImage.resolveAssetSource(exampleImage).uri;
 
 type FormData = {
@@ -29,12 +31,35 @@ type FormData = {
   rememberMe: boolean;
 };
 
-const SignInScreen = ({ navigation }) => {
-  const { control, handleSubmit, errors } = useForm<FormData>();
+const SignInScreen = () => {
+  const {
+    control,
+    handleSubmit,
+    errors,
+    register,
+    setValue,
+    getValues,
+  } = useForm<FormData>();
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
-    Alert.alert('Form Data ', JSON.stringify(data));
+  const { navigate } = useNavigation();
+
+  useEffect(() => {
+    register('rememberMe');
+  }, []);
+
+  const onSubmit = async (data: FormData) => {
+    console.log('data: ', data);
+    const { email, password, rememberMe } = data;
+
+    try {
+      const res = await api.login({ email, password, rememberMe });
+
+      if (res?.token) {
+        navigate(screens.main.MyProfile);
+      }
+    } catch (error) {
+      Alert.alert('Oops!', error);
+    }
   };
 
   return (
@@ -102,13 +127,15 @@ const SignInScreen = ({ navigation }) => {
                   marginBottom: 30,
                 }}>
                 <CheckBox
-                  disabled={false}
-                  boxType={'square'}
-                  onCheckColor={Colors.lightGreen}
-                  tintColor={Colors.white}
-                  onTintColor={Colors.lightGreen}
-                  value={false}
+                  checkedIcon="dot-circle-o"
+                  uncheckedIcon="circle-o"
+                  checked={getValues('rememberMe')}
+                  onPress={() => {
+                    setValue('rememberMe', !getValues('rememberMe'));
+                  }}
+                  size={30}
                 />
+
                 <Text
                   style={{
                     fontSize: 20,
@@ -118,6 +145,7 @@ const SignInScreen = ({ navigation }) => {
                   Remember Me
                 </Text>
               </View>
+
               <Button
                 onPress={handleSubmit(onSubmit)}
                 titleStyle={{ fontSize: 20, color: Colors.darkBlue }}
@@ -140,14 +168,7 @@ const SignInScreen = ({ navigation }) => {
                 title="or continue with Gmail"
               />
               <View style={{ flex: 1 }}>
-                <View
-                  style={{
-                    flex: 1,
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginTop: 30,
-                  }}>
+                <View style={styles.newEnergyContainer}>
                   <Text style={styles.sectionBottom}>
                     New to Energy Freelance?
                   </Text>
@@ -157,7 +178,7 @@ const SignInScreen = ({ navigation }) => {
                       textDecorationLine: 'underline',
                     }}
                     type={'clear'}
-                    onPress={() => navigation.navigate('SignUp')}
+                    onPress={() => navigate('SignUp')}
                     title="Sign Up"
                   />
                 </View>
@@ -167,7 +188,7 @@ const SignInScreen = ({ navigation }) => {
                     textDecorationLine: 'underline',
                   }}
                   type={'clear'}
-                  onPress={() => navigation.navigate('PasswordForgot')}
+                  onPress={() => navigate('PasswordForgot')}
                   title="Forgot your password?"
                 />
               </View>
@@ -186,7 +207,9 @@ const styles = StyleSheet.create({
   body: {
     backgroundColor: 'transparent',
   },
+
   linearGradient: { flex: 1 },
+
   sectionContainer: {
     marginTop: 32,
     paddingHorizontal: 24,
@@ -220,6 +243,14 @@ const styles = StyleSheet.create({
   },
   highlight: {
     fontWeight: '700',
+  },
+
+  newEnergyContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 30,
   },
 });
 
