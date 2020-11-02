@@ -15,6 +15,7 @@
     "env:all": "yarn env:dev && yarn env:stage && yarn env:beta && yarn env:prod"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.13.1",
     "@react-native-community/checkbox": "^0.5.3",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/drawer": "^5.9.3",

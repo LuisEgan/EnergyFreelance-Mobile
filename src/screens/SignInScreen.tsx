@@ -1,15 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  SafeAreaView,
   ScrollView,
-  StatusBar,
   View,
   ActivityIndicator,
   Image as RNImage,
   StyleSheet,
-  Alert,
-  Platform,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Button, Image, Text, CheckBox } from 'react-native-elements';
 import LinearGradient from 'react-native-linear-gradient';
@@ -20,9 +17,15 @@ import Input from '../components/Input';
 
 // @ts-ignore
 import exampleImage from '../assets/Energy_Freelance_vertical_white.png';
-import api from '../api';
 import { useNavigation } from '@react-navigation/native';
 import screens from '../constants/screens';
+import { useDispatch, useSelector } from 'react-redux';
+import { authUser, startAsyncCall } from '../store/actions';
+import {
+  ASYNC_STORAGE_REMEMBER_ME,
+  ASYNC_STORAGE_USER,
+} from '../constants/asyncStorage';
+import { clockRunning } from 'react-native-reanimated';
 const exampleImageUri = RNImage.resolveAssetSource(exampleImage).uri;
 
 type FormData = {
@@ -32,34 +35,65 @@ type FormData = {
 };
 
 const SignInScreen = () => {
-  const {
-    control,
-    handleSubmit,
-    errors,
-    register,
-    setValue,
-    getValues,
-  } = useForm<FormData>();
+  const { control, handleSubmit, register, setValue } = useForm<FormData>();
 
+  const dispatch = useDispatch();
   const { navigate } = useNavigation();
 
+  const auth = useSelector((state) => state.root.authenticated);
+  const user = useSelector((state) => state.root.user);
+  const asyncCallInProgress = useSelector((state) => state.root.asyncCallInProgress);
+  console.log('user: ', user);
+  console.log('asyncCallInProgress: ', asyncCallInProgress);
+  const [rememberMe, setRememberMe] = useState<boolean>(false);
+
+  // * Check if automatic sign in
+  useEffect(() => {
+    const check = async () => {
+      try {
+        const remembered = await AsyncStorage.getItem(
+          ASYNC_STORAGE_REMEMBER_ME,
+        );
+
+        if (remembered === 'true') {
+          // dispatch(authUser(data));
+        }
+      } catch (error) {
+        console.error('error: ', error);
+      }
+
+      check();
+    };
+  }, []);
+
+  // * Register fields
   useEffect(() => {
     register('rememberMe');
   }, []);
 
-  const onSubmit = async (data: FormData) => {
-    console.log('data: ', data);
-    const { email, password, rememberMe } = data;
+  // * Redirect on auth
+  useEffect(() => {
+    const doSignIn = async () => {
+      try {
+        await AsyncStorage.setItem(ASYNC_STORAGE_USER, JSON.stringify(user));
+        await AsyncStorage.setItem(ASYNC_STORAGE_REMEMBER_ME, `${rememberMe}`);
 
-    try {
-      const res = await api.login({ email, password, rememberMe });
-
-      if (res?.token) {
-        navigate(screens.main.MyProfile);
+        setTimeout(() => {
+          navigate(screens.main.MyProfile);
+        }, 2000);
+      } catch (error) {
+        console.error('error: ', error);
       }
-    } catch (error) {
-      Alert.alert('Oops!', error);
+    };
+
+    if (auth) {
+      doSignIn();
     }
+  }, [auth]);
+
+  const onSubmit = async (data: FormData) => {
+    dispatch(startAsyncCall());
+    dispatch(authUser(data));
   };
 
   return (
@@ -127,11 +161,10 @@ const SignInScreen = () => {
                   marginBottom: 30,
                 }}>
                 <CheckBox
-                  checkedIcon="dot-circle-o"
-                  uncheckedIcon="circle-o"
-                  checked={getValues('rememberMe')}
+                  checked={rememberMe}
                   onPress={() => {
-                    setValue('rememberMe', !getValues('rememberMe'));
+                    setRememberMe(!rememberMe);
+                    setValue('rememberMe', !rememberMe);
                   }}
                   size={30}
                 />

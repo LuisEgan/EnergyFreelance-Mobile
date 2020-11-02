@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { createStore, applyMiddleware } from 'redux';
-import logger from 'redux-logger';
 
 import epicMiddleware, { rootEpic } from './epics/';
 import reducers from './reducers';
@@ -8,7 +7,7 @@ import reducers from './reducers';
 let store;
 
 const initStore = (initialState: {}) => {
-  const reduxMiddleware = applyMiddleware(epicMiddleware, logger);
+  const reduxMiddleware = applyMiddleware(epicMiddleware);
   const store = createStore(reducers, initialState, reduxMiddleware);
 
   epicMiddleware.run(rootEpic);
