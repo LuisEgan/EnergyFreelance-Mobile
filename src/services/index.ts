@@ -18,10 +18,47 @@ const API_GET_PUBLIC_PROJECTS =
   /*`${process.env.NEXT_PUBLIC_ENV_API}/GetAllProjects`*/ 'https://dev-api-projects-energyfreelance.azurewebsites.net/api/GetAllProjects';
 const API_APPLY_PROJECT = `${ENV_API}/ApplyProject`;
 const API_GET_APPLICATIONS = `${ENV_API}/GetApplicationOffers`;
+const API_AUTH_USER =
+  'https://dev-api-security-energyfreelance.azurewebsites.net/api/authenticate?code=hd62IxKMciS8yk7eIUxTUsQRilXiRg3KdaxajLqCj4U/4ROddNUR/A==';
+const API_AUTH_FREELANCER =
+  'https://dev-api-freelancer-energyfreelance.azurewebsites.net/api/FindFreelancebyId?code=ltsR0y6kFpzo7oP4llTGOWW/EimVfpmcQ1d0nYVWV2RX9z3l0MnLgA==';
+const API_AUTH_WORKPROVIDER =
+  'https://dev-api-workprovider-energyfreelance.azurewebsites.net/api/FindWPbyId?code=1M6zk4BX/KlXWVcQtIYHaaAknH3V5lgJBl0QFGbU7HwHbxKvI7CyWA==';
+
+export const authUser = (action) => {
+  const { data } = action.payload;
+  const url = API_AUTH_USER;
+
+  return request({
+    url,
+    method: 'POST',
+    responseType: 'json',
+    body: JSON.stringify({
+      ...data,
+    }),
+  });
+};
+
+export function authUserByType(action) {
+  const { response } = action.payload;
+  const { user } = response.token;
+  const { id, type } = user;
+
+  let url =
+    (type === FREELANCER ? API_AUTH_FREELANCER : API_AUTH_WORKPROVIDER) +
+    `&UserId=${id}`;
+
+  return request({
+    url,
+    method: 'GET',
+    responseType: 'json',
+  });
+}
 
 export function createUser(action: any) {
   const { type } = action.payload;
   const url = API_URL_CREATE_USERS;
+  console.log('url: ', url);
 
   return request({
     url,

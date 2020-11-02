@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   ScrollView,
@@ -19,6 +19,10 @@ import Input from '../components/Input';
 
 // @ts-ignore
 import exampleImage from '../assets/Energy_Freelance_vertical_white.png';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ASYNC_STORAGE_USER } from '../constants/asyncStorage';
+import screens from '../constants/screens';
+import { useNavigation } from '@react-navigation/native';
 const exampleImageUri = RNImage.resolveAssetSource(exampleImage).uri;
 
 type FormData = {
@@ -37,9 +41,33 @@ type UserData = {
 };
 
 const SignUpScreen = ({ navigation }) => {
+  const { navigate } = useNavigation();
   const dispatch = useDispatch();
+  const auth = useSelector((state) => state.root.authenticated);
+  const user = useSelector((state) => state.root.user);
+  console.log('user: ', user);
+
   const [selectedIndex, setSelectedIndex] = useState(0);
   const { control, handleSubmit, errors } = useForm<FormData>();
+
+  // * Redirect on auth
+  useEffect(() => {
+    const doSignIn = async () => {
+      try {
+        await AsyncStorage.setItem(ASYNC_STORAGE_USER, JSON.stringify(user));
+
+        setTimeout(() => {
+          navigate(screens.main.MyProfile);
+        }, 2000);
+      } catch (error) {
+        console.error('error: ', error);
+      }
+    };
+
+    if (auth) {
+      doSignIn();
+    }
+  }, [auth]);
 
   const onSubmit = (data: FormData) => {
     let userType = selectedIndex + 1;
@@ -50,7 +78,6 @@ const SignUpScreen = ({ navigation }) => {
       status: '0',
       isgoogle: 'False',
     };
-    // {"type":1,"email":"admin@exampleadminadmin.com","password":"Password!1","status":"0","isgoogle":"False"}
     dispatch(startAsyncCall());
     dispatch(fetchUser(newUser));
   };
@@ -204,7 +231,7 @@ const SignUpScreen = ({ navigation }) => {
                       textDecorationLine: 'underline',
                     }}
                     type={'clear'}
-                    onPress={() => navigation.navigate('SignIn')}
+                    onPress={() => navigate(screens.main.SignIn)}
                     title="Log In"
                   />
                   <Button
@@ -213,7 +240,7 @@ const SignUpScreen = ({ navigation }) => {
                       textDecorationLine: 'underline',
                     }}
                     type={'clear'}
-                    onPress={() => navigation.navigate('Steps')}
+                    onPress={() => navigate(screens.main.Steps)}
                     title="Steps"
                   />
                 </View>

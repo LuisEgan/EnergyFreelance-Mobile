@@ -150,15 +150,14 @@ export default function reducer(state = INITIAL_STATE, { type, payload }) {
         // const normalizedUser = normalize({ ...payload.response.user }, user)
         if (payload.response.success) {
           draft.user = { ...draft.user, ...payload.response.user };
-          // NotificationManager.success(
-          //   'User created succesfully.',
-          //   'Welcome!',
-          //   1500,
-          // );
           draft.authenticated = true;
           draft.asyncCallInProgress = false;
-          draft.error = '';
+          draft.error = null;
         }
+        break;
+
+      case types.FETCH_USER:
+        draft.user = payload.user;
         break;
 
       case types.FETCH_USER_FAILURE:
@@ -429,6 +428,20 @@ export default function reducer(state = INITIAL_STATE, { type, payload }) {
         break;
 
       case types.FETCH_APPLICATIONS_FAILURE:
+        break;
+
+      case types.AUTH_BY_TYPE_FAILURE:
+        draft.asyncCallInProgress = false;
+        break;
+
+      case types.AUTH_BY_TYPE_SUCCESS:
+        draft.user = {
+          ...payload.actionPayload.response.token.user,
+          ...payload.response.profile,
+        };
+        draft.authenticated = true;
+        draft.asyncCallInProgress = false;
+        draft.error = null;
         break;
     }
   });

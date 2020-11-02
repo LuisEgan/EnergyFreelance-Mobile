@@ -1,6 +1,12 @@
-import { of, from } from 'rxjs'
-import { concatMap, mergeMap, switchMap, catchError, map } from 'rxjs/operators'
-import { combineEpics, ofType } from 'redux-observable'
+import { of, from } from 'rxjs';
+import {
+  concatMap,
+  mergeMap,
+  switchMap,
+  catchError,
+  map,
+} from 'rxjs/operators';
+import { combineEpics, ofType } from 'redux-observable';
 
 import {
   createUser,
@@ -13,9 +19,53 @@ import {
   getPublicProjects,
   applyToProject,
   getApplications,
-} from '../../services'
-import * as actions from '../actions'
-import * as types from '../actionTypes'
+  authUser,
+  authUserByType,
+} from '../../services';
+import * as actions from '../actions';
+import * as types from '../actionTypes';
+
+export const authUserEpic = (action$, state$) => {
+  return action$.pipe(
+    ofType(types.AUTH_USER),
+    switchMap((action) =>
+      from(authUser(action)).pipe(
+        switchMap((response) => {
+          return [
+            response.response.success
+              ? actions.authUserSuccess(response.response)
+              : actions.authUserFailure(response.status, response.response),
+          ];
+        }),
+        catchError((error) =>
+          of(actions.authUserFailure(error.status, error.response)),
+        ),
+      ),
+    ),
+  );
+};
+
+export const authByTypeEpic = (action$, state$) => {
+  return action$.pipe(
+    ofType(types.AUTH_BY_TYPE),
+    switchMap((action) =>
+      from(authUserByType(action)).pipe(
+        switchMap((response) => {
+          console.log('response: ', response);
+
+          return [
+            response.response.success
+              ? actions.authByTypeSuccess(response.response, action.payload)
+              : actions.authByTypeFailure(response.status, response.response),
+          ];
+        }),
+        catchError((error) =>
+          of(actions.authByTypeFailure(error.status, error.response)),
+        ),
+      ),
+    ),
+  );
+};
 
 export const fetchUserEpic = (action$, state$) => {
   return action$.pipe(
@@ -24,11 +74,10 @@ export const fetchUserEpic = (action$, state$) => {
       from(createUser(action)).pipe(
         switchMap((response) => [
           response.response.success
-            ? actions.fetchUserSuccess(response.response, action.payload)
+            ? actions.fetchUserSuccess(response.response)
             : actions.fetchUserFailure(
                 response.status,
                 response.response,
-                action.payload
               ),
         ]),
         catchError((error) =>
@@ -36,14 +85,14 @@ export const fetchUserEpic = (action$, state$) => {
             actions.fetchUserFailure(
               error.status,
               error.response,
-              action.payload
-            )
-          )
-        )
-      )
-    )
-  )
-}
+              action.payload,
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+};
 
 export const createUserProfileEpic = (action$, state$) => {
   return action$.pipe(
@@ -54,27 +103,27 @@ export const createUserProfileEpic = (action$, state$) => {
           response.response.success
             ? actions.createUserProfileSuccess(
                 response.response,
-                action.payload
+                action.payload,
               )
             : actions.createUserProfileFailure(
                 response.status,
                 response.response,
-                action.payload
-              )
+                action.payload,
+              ),
         ),
         catchError((error) =>
           of(
             actions.createUserProfileFailure(
               error.status,
               error.response,
-              action.payload
-            )
-          )
-        )
-      )
-    )
-  )
-}
+              action.payload,
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+};
 
 export const updateUserEmailsEpic = (action$, state$) => {
   return action$.pipe(
@@ -87,22 +136,22 @@ export const updateUserEmailsEpic = (action$, state$) => {
             : actions.updateEmailsFailure(
                 response.status,
                 response.response,
-                action.payload
-              )
+                action.payload,
+              ),
         ),
         catchError((error) =>
           of(
             actions.updateEmailsFailure(
               error.status,
               error.response,
-              action.payload
-            )
-          )
-        )
-      )
-    )
-  )
-}
+              action.payload,
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+};
 
 export const fetchFreelancersEpic = (action$, state$) => {
   return action$.pipe(
@@ -115,7 +164,7 @@ export const fetchFreelancersEpic = (action$, state$) => {
             : actions.fetchFreelancersFailure(
                 response.status,
                 response.response,
-                action.payload
+                action.payload,
               ),
         ]),
         catchError((error) =>
@@ -123,14 +172,14 @@ export const fetchFreelancersEpic = (action$, state$) => {
             actions.fetchFreelancersFailure(
               error.status,
               error.response,
-              action.payload
-            )
-          )
-        )
-      )
-    )
-  )
-}
+              action.payload,
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+};
 
 export const createProjectEpic = (action$, state$) => {
   return action$.pipe(
@@ -143,22 +192,22 @@ export const createProjectEpic = (action$, state$) => {
             : actions.createProjectFailure(
                 response.status,
                 response.response,
-                action.payload
-              )
+                action.payload,
+              ),
         ),
         catchError((error) =>
           of(
             actions.createProjectFailure(
               error.status,
               error.response,
-              action.payload
-            )
-          )
-        )
-      )
-    )
-  )
-}
+              action.payload,
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+};
 
 export const fetchProjectsByStatusEpic = (action$, state$) => {
   return action$.pipe(
@@ -169,27 +218,27 @@ export const fetchProjectsByStatusEpic = (action$, state$) => {
           response.response.success
             ? actions.fetchProjectsByStatusSuccess(
                 response.response,
-                action.payload
+                action.payload,
               )
             : actions.fetchProjectsByStatusFailure(
                 response.status,
                 response.response,
-                action.payload
-              )
+                action.payload,
+              ),
         ),
         catchError((error) =>
           of(
             actions.fetchProjectsByStatusFailure(
               error.status,
               error.response,
-              action.payload
-            )
-          )
-        )
-      )
-    )
-  )
-}
+              action.payload,
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+};
 
 export const updateProjectStatusEpic = (action$, state$) => {
   return action$.pipe(
@@ -200,27 +249,27 @@ export const updateProjectStatusEpic = (action$, state$) => {
           response.response.success
             ? actions.updateProjectStatusSuccess(
                 response.response,
-                action.payload
+                action.payload,
               )
             : actions.updateProjectStatusFailure(
                 response.status,
                 response.response,
-                action.payload
-              )
+                action.payload,
+              ),
         ),
         catchError((error) =>
           of(
             actions.updateProjectStatusFailure(
               error.status,
               error.response,
-              action.payload
-            )
-          )
-        )
-      )
-    )
-  )
-}
+              action.payload,
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+};
 
 export const fetchPublicProjectsEpic = (action$, state$) => {
   return action$.pipe(
@@ -231,12 +280,12 @@ export const fetchPublicProjectsEpic = (action$, state$) => {
           response.response.success
             ? actions.fetchPublicProjectsSuccess(
                 response.response,
-                action.payload
+                action.payload,
               )
             : actions.fetchPublicProjectsFailure(
                 response.status,
                 response.response,
-                action.payload
+                action.payload,
               ),
         ]),
         catchError((error) =>
@@ -244,14 +293,14 @@ export const fetchPublicProjectsEpic = (action$, state$) => {
             actions.fetchPublicProjectsFailure(
               error.status,
               error.response,
-              action.payload
-            )
-          )
-        )
-      )
-    )
-  )
-}
+              action.payload,
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+};
 
 export const applyToProjectEpic = (action$, state$) => {
   return action$.pipe(
@@ -264,22 +313,22 @@ export const applyToProjectEpic = (action$, state$) => {
             : actions.applyProjectFailure(
                 response.status,
                 response.response,
-                action.payload
-              )
+                action.payload,
+              ),
         ),
         catchError((error) =>
           of(
             actions.updateProjectStatusFailure(
               error.status,
               error.response,
-              action.payload
-            )
-          )
-        )
-      )
-    )
-  )
-}
+              action.payload,
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+};
 
 export const fetchApplicationsEpic = (action$, state$) => {
   return action$.pipe(
@@ -290,12 +339,12 @@ export const fetchApplicationsEpic = (action$, state$) => {
           response.response.success
             ? actions.fetchApplicationsSuccess(
                 response.response,
-                action.payload
+                action.payload,
               )
             : actions.fetchApplicationsFailure(
                 response.status,
                 response.response,
-                action.payload
+                action.payload,
               ),
         ]),
         catchError((error) =>
@@ -303,16 +352,18 @@ export const fetchApplicationsEpic = (action$, state$) => {
             actions.fetchApplicationsFailure(
               error.status,
               error.response,
-              action.payload
-            )
-          )
-        )
-      )
-    )
-  )
-}
+              action.payload,
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+};
 
 export default combineEpics(
+  authUserEpic,
+  authByTypeEpic,
   fetchUserEpic,
   createUserProfileEpic,
   updateUserEmailsEpic,
@@ -322,5 +373,5 @@ export default combineEpics(
   updateProjectStatusEpic,
   fetchPublicProjectsEpic,
   applyToProjectEpic,
-  fetchApplicationsEpic
-)
+  fetchApplicationsEpic,
+);

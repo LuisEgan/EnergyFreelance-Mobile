@@ -1,9 +1,8 @@
 import axios from 'axios';
-import { proc } from 'react-native-reanimated';
 import { IUser } from '../lib/types';
 
 // * Interface for login func params
-interface ILogin {
+interface ISignIn {
   email: string;
   password: string;
   rememberMe: boolean;
@@ -11,7 +10,7 @@ interface ILogin {
 }
 
 // * Interface for login endpoint response
-interface ILoginRes {
+interface ISignInRes {
   token: string;
   expiration: number;
   refreshToken: string;
@@ -20,12 +19,11 @@ interface ILoginRes {
   user: IUser;
 }
 
-const login = async (params: ILogin): Promise<ILoginRes> => {
+const signIn = async (params: ISignIn): Promise<ISignInRes> => {
   const { email, password, rememberMe, onError } = params;
 
-  return ':p';
   try {
-    const res = await axios.post<ILoginRes>(`${process.env.API_URL}/login`, {
+    const res = await axios.post<ISignInRes>(`${process.env.API_URL}/login`, {
       email,
       password,
       rememberMe,
@@ -44,5 +42,5 @@ const login = async (params: ILogin): Promise<ILoginRes> => {
 };
 
 export default {
-  login,
+  signIn,
 };
