@@ -6,7 +6,6 @@ import {
   ActivityIndicator,
   Image as RNImage,
   StyleSheet,
-  Platform,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Button, ButtonGroup, Image, Text } from 'react-native-elements';
