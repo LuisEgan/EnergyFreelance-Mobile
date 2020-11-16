@@ -43,8 +43,7 @@ const SignInScreen = () => {
   const auth = useSelector((state) => state.root.authenticated);
   const user = useSelector((state) => state.root.user);
   const asyncCallInProgress = useSelector((state) => state.root.asyncCallInProgress);
-  console.log('user: ', user);
-  console.log('asyncCallInProgress: ', asyncCallInProgress);
+  console.log('user: ', user); 
   const [rememberMe, setRememberMe] = useState<boolean>(false);
 
   // * Check if automatic sign in
@@ -77,10 +76,7 @@ const SignInScreen = () => {
       try {
         await AsyncStorage.setItem(ASYNC_STORAGE_USER, JSON.stringify(user));
         await AsyncStorage.setItem(ASYNC_STORAGE_REMEMBER_ME, `${rememberMe}`);
-
-        setTimeout(() => {
-          navigate(screens.main.MyProfile);
-        }, 2000);
+        navigate(screens.main.MyProfile);
       } catch (error) {
         console.error('error: ', error);
       }

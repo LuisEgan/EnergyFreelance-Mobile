@@ -12,7 +12,7 @@ export const openMobileMenu = () => ({
 
 export const logout = () => ({
   type: types.LOGOUT,
-});
+})
 
 // ACTIONS FOR FETCHING USERS
 export const startAsyncCall = () => ({

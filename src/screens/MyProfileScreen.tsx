@@ -25,6 +25,8 @@ import Colors from '../constants/colors';
 
 // @ts-ignore
 import exampleImage from '../assets/Energy_Freelance_vertical_white.png';
+import { useSelector } from 'react-redux';
+import { containsObject } from '../lib/locationController';
 const exampleImageUri = RNImage.resolveAssetSource(exampleImage).uri;
 
 type FormData = {
@@ -40,7 +42,11 @@ const MyProfileScreen = ({ navigation }) => {
     setSelectedIndex(index);
   };
 
-  const component1 = () => (
+  const user = useSelector((state) =>
+    state.root.authenticated ? state.root.user : null
+  )
+  
+  const component1 = () => (      
     <Text style={{ fontSize: 16, textAlign: 'center', color: Colors.darkBlue }}>
       Available to hire
     </Text>
@@ -51,7 +57,56 @@ const MyProfileScreen = ({ navigation }) => {
     </Text>
   );
   const buttons = [{ element: component1 }, { element: component2 }];
+const industry = user.industries.industry;
 
+  const getExperienceLocationBasins = () => {
+    let basins: any[] = []
+
+    if (industry === undefined) return basins
+
+    industry.locations.forEach((l: { basin: { id: any; } | null; }) => {
+      if (l.basin !== null) {
+        if (!containsObject(l.basin.id, basins)) {
+          basins.push(l.basin)
+        }
+      }
+    })
+
+    return basins
+  }
+  const getExperienceLocationStates = () => {
+    let states: any[] = []
+
+    if (industry === undefined) return states
+
+    industry.locations.forEach((l: { county: { state: { id: any; } | null; } | null; }) => {
+      if (l.county !== null) {
+        if (l.county.state !== null) {
+          if (!containsObject(l.county.state.id, states)) {
+            states.push(l.county.state)
+          }
+        }
+      }
+    })
+
+    return states
+  }
+
+  const getExperienceLocationCounties = () => {
+    let counties: any[] = []
+
+    if (industry === undefined) return counties
+
+    industry.locations.forEach((l: { county: { id: any; } | null; }) => {
+      if (l.county !== null) {
+        if (!containsObject(l.county.id, counties)) {
+          counties.push(l.county)
+        }
+      }
+    })
+
+    return counties
+  }
   return (
     <KeyboardAvoidingView
       style={{ flexGrow: 1 }}
@@ -92,11 +147,11 @@ const MyProfileScreen = ({ navigation }) => {
                   <TouchableOpacity>
                     <Text
                       style={{
-                        fontSize: 18,
+                        fontSize: 15,
                         fontWeight: 'bold',
                         textAlign: 'left',
                         color: Colors.white,
-                        marginRight: 20,
+                        marginRight: 15,
                       }}>
                       My Profile
                     </Text>
@@ -104,11 +159,11 @@ const MyProfileScreen = ({ navigation }) => {
                   <TouchableOpacity>
                     <Text
                       style={{
-                        fontSize: 18,
+                        fontSize: 15,
                         fontWeight: 'bold',
                         textAlign: 'left',
                         color: Colors.white,
-                        marginRight: 20,
+                        marginRight: 15,
                       }}>
                       General Settings
                     </Text>
@@ -116,11 +171,11 @@ const MyProfileScreen = ({ navigation }) => {
                   <TouchableOpacity>
                     <Text
                       style={{
-                        fontSize: 18,
+                        fontSize: 15,
                         fontWeight: 'bold',
                         textAlign: 'left',
                         color: Colors.white,
-                        marginRight: 20,
+                        marginRight: 15,
                       }}>
                       Manage Payments
                     </Text>
@@ -178,11 +233,12 @@ const MyProfileScreen = ({ navigation }) => {
                   fontWeight: 'bold',
                   textAlign: 'left',
                   color: Colors.darkBlue,
-                  marginBottom: 20,
+                  marginBottom: 5,
+                  marginLeft: 15,
                 }}>
                 Personal Information
               </Text>
-              <Card containerStyle={{ borderRadius: 6, paddingVertical: 40 }}>
+              <Card containerStyle={{ borderRadius: 6, paddingVertical: 20 }}>
                 <View
                   style={{
                     flex: 1,
@@ -206,7 +262,7 @@ const MyProfileScreen = ({ navigation }) => {
                   />
                 </View>
                 <Card.Title style={{ fontSize: 20, color: Colors.midBlue }}>
-                  D Pastor
+                {`${user.firstName} ${user.lastName}`}
                 </Card.Title>
                 <View
                   style={{
@@ -216,10 +272,10 @@ const MyProfileScreen = ({ navigation }) => {
                     marginBottom: 16,
                   }}>
                   <Text style={{ fontSize: 18, marginVertical: 5 }}>
-                    someemail@email.com
+                  {user.email}
                   </Text>
                   <Text style={{ fontSize: 18, marginVertical: 5 }}>
-                    2111-1111
+                  {user.phoneNumber}
                   </Text>
                 </View>
                 <Card.Divider
@@ -246,7 +302,7 @@ const MyProfileScreen = ({ navigation }) => {
                         fontSize: 18,
                         fontWeight: 'normal',
                       }}>
-                      2 years
+                      {user.years}
                     </Text>
                   </View>
                   <View
@@ -269,7 +325,7 @@ const MyProfileScreen = ({ navigation }) => {
                         fontSize: 18,
                         fontWeight: 'normal',
                       }}>
-                      2 years
+                      {user.position.name}
                     </Text>
                   </View>
                   <View
@@ -367,7 +423,7 @@ const MyProfileScreen = ({ navigation }) => {
                 </Text>
               </View>
 
-              <Card containerStyle={{ borderRadius: 6, paddingVertical: 40 }}>
+              <Card containerStyle={{ borderRadius: 6, paddingVertical: 20 }}>
                 <View style={{ flex: 1, flexDirection: 'column' }}>
                   <View
                     style={{
@@ -444,13 +500,27 @@ const MyProfileScreen = ({ navigation }) => {
                         }}>
                         Basins
                       </Text>
-                      <Text
-                        style={{
-                          fontSize: 18,
-                          fontWeight: 'normal',
-                        }}>
-                        Delaware
-                      </Text>
+                        {getExperienceLocationBasins().length > 0 &&
+                        getExperienceLocationBasins().map((b) => {
+                          return (
+                            <>
+                              <Text 
+                                style={{
+                                fontSize: 18,
+                                fontWeight: 'normal',
+                            }}>{b.basinName}</Text>
+                            </>
+                          )
+                        })}
+                      {!getExperienceLocationBasins().length && (
+                        <>
+                          <Text
+                            style={{
+                            fontSize: 18,
+                            fontWeight: 'normal',
+                            }}>None</Text>
+                        </>
+                      )}
                     </View>
                     <View
                       style={{
@@ -467,13 +537,27 @@ const MyProfileScreen = ({ navigation }) => {
                         }}>
                         State
                       </Text>
-                      <Text
-                        style={{
-                          fontSize: 18,
-                          fontWeight: 'normal',
-                        }}>
-                        Texas
-                      </Text>
+                        {getExperienceLocationStates().length > 0 &&
+                        getExperienceLocationStates().map((s: { stateName: React.ReactNode; }) => {
+                          return (
+                            <>
+                              <Text 
+                                style={{
+                                fontSize: 18,
+                                fontWeight: 'normal',
+                        }}>{s.stateName}</Text>
+                            </>
+                          )
+                        })}
+                      {!getExperienceLocationStates().length && (
+                        <>
+                          <Text 
+                            style={{
+                            fontSize: 18,
+                            fontWeight: 'normal',
+                        }}>None</Text>
+                        </>
+                      )}
                     </View>
                     <View
                       style={{
@@ -489,14 +573,27 @@ const MyProfileScreen = ({ navigation }) => {
                           color: Colors.midBlue,
                         }}>
                         Counties
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: 18,
-                          fontWeight: 'normal',
-                        }}>
-                        Pecos (TX)
-                      </Text>
+                      </Text>                      
+                        {getExperienceLocationCounties().length > 0 &&
+                        getExperienceLocationCounties().map((c) => {
+                          return (
+                            <>
+                            <Text
+                                style={{
+                                fontSize: 18,
+                                fontWeight: 'normal',
+                                }}>{c.countyName}</Text>
+                            </>
+                          )
+                        })}
+                      {!getExperienceLocationCounties().length && (
+                        <>
+                          <Text style={{
+                                fontSize: 18,
+                                fontWeight: 'normal',
+                                }}>None</Text>
+                        </>
+                      )}
                     </View>
                   </View>
                 </View>
@@ -545,7 +642,7 @@ const MyProfileScreen = ({ navigation }) => {
                 </Text>
               </View>
 
-              <Card containerStyle={{ borderRadius: 6, paddingVertical: 40 }}>
+              <Card containerStyle={{ borderRadius: 6, paddingVertical: 20 }}>
                 <Button
                   type="outline"
                   // onPress={handleSubmit(onSubmit)}
@@ -589,7 +686,7 @@ const MyProfileScreen = ({ navigation }) => {
                 </Text>
               </View>
 
-              <Card containerStyle={{ borderRadius: 6, paddingVertical: 40 }}>
+              <Card containerStyle={{ borderRadius: 6, paddingVertical: 20 }}>
                 <View style={{ flex: 1, flexDirection: 'column' }}>
                   <View
                     style={{
@@ -618,7 +715,7 @@ const MyProfileScreen = ({ navigation }) => {
                           fontSize: 18,
                           fontWeight: 'normal',
                         }}>
-                        $22
+                        {user.generalHourRate}
                       </Text>
                     </View>
                     <Text
@@ -679,9 +776,8 @@ const styles = StyleSheet.create({
   sectionContainer: {
     flex: 1,
     backgroundColor: Colors.lightGray,
-    marginVertical: 32,
-    paddingVertical: 20,
-    paddingHorizontal: 24,
+    marginVertical: 10,
+    paddingVertical: 2,
   },
   sectionTitle: {
     fontSize: 18,

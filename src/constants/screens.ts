@@ -10,5 +10,6 @@ export default {
     SignIn: 'SignIn',
     SignUp: 'SignUp',
     Steps: 'Steps',
+    LogOut: 'LogOut'
   },
 };
