@@ -42,8 +42,9 @@ const SignInScreen = () => {
 
   const auth = useSelector((state) => state.root.authenticated);
   const user = useSelector((state) => state.root.user);
-  const asyncCallInProgress = useSelector((state) => state.root.asyncCallInProgress);
-  console.log('user: ', user); 
+  const asyncCallInProgress = useSelector(
+    (state) => state.root.asyncCallInProgress,
+  );
   const [rememberMe, setRememberMe] = useState<boolean>(false);
 
   // * Check if automatic sign in
@@ -183,7 +184,7 @@ const SignInScreen = () => {
                   paddingVertical: 16,
                   marginBottom: 20,
                 }}
-                title="Log In"
+                title={asyncCallInProgress ? 'Loading..' : 'Log In'}
               />
               <Button
                 type="outline"

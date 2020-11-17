@@ -43,10 +43,10 @@ const MyProfileScreen = ({ navigation }) => {
   };
 
   const user = useSelector((state) =>
-    state.root.authenticated ? state.root.user : null
-  )
-  
-  const component1 = () => (      
+    state.root.authenticated ? state.root.user : null,
+  );
+
+  const component1 = () => (
     <Text style={{ fontSize: 16, textAlign: 'center', color: Colors.darkBlue }}>
       Available to hire
     </Text>
@@ -56,57 +56,60 @@ const MyProfileScreen = ({ navigation }) => {
       Unavailable to hire
     </Text>
   );
+
   const buttons = [{ element: component1 }, { element: component2 }];
-const industry = user.industries.industry;
+  const industry = user?.industries.industry;
 
   const getExperienceLocationBasins = () => {
-    let basins: any[] = []
+    let basins: any[] = [];
 
-    if (industry === undefined) return basins
+    if (!industry) return basins;
 
-    industry.locations.forEach((l: { basin: { id: any; } | null; }) => {
+    industry.locations.forEach((l: { basin: { id: any } | null }) => {
       if (l.basin !== null) {
         if (!containsObject(l.basin.id, basins)) {
-          basins.push(l.basin)
+          basins.push(l.basin);
         }
       }
-    })
+    });
 
-    return basins
-  }
+    return basins;
+  };
   const getExperienceLocationStates = () => {
-    let states: any[] = []
+    let states: any[] = [];
 
-    if (industry === undefined) return states
+    if (!industry) return states;
 
-    industry.locations.forEach((l: { county: { state: { id: any; } | null; } | null; }) => {
-      if (l.county !== null) {
-        if (l.county.state !== null) {
-          if (!containsObject(l.county.state.id, states)) {
-            states.push(l.county.state)
+    industry.locations.forEach(
+      (l: { county: { state: { id: any } | null } | null }) => {
+        if (l.county !== null) {
+          if (l.county.state !== null) {
+            if (!containsObject(l.county.state.id, states)) {
+              states.push(l.county.state);
+            }
           }
         }
-      }
-    })
+      },
+    );
 
-    return states
-  }
+    return states;
+  };
 
   const getExperienceLocationCounties = () => {
-    let counties: any[] = []
+    let counties: any[] = [];
 
-    if (industry === undefined) return counties
+    if (!industry) return counties;
 
-    industry.locations.forEach((l: { county: { id: any; } | null; }) => {
+    industry.locations.forEach((l: { county: { id: any } | null }) => {
       if (l.county !== null) {
         if (!containsObject(l.county.id, counties)) {
-          counties.push(l.county)
+          counties.push(l.county);
         }
       }
-    })
+    });
 
-    return counties
-  }
+    return counties;
+  };
   return (
     <KeyboardAvoidingView
       style={{ flexGrow: 1 }}
@@ -262,7 +265,7 @@ const industry = user.industries.industry;
                   />
                 </View>
                 <Card.Title style={{ fontSize: 20, color: Colors.midBlue }}>
-                {`${user.firstName} ${user.lastName}`}
+                  {`${user?.firstName} ${user?.lastName}`}
                 </Card.Title>
                 <View
                   style={{
@@ -272,10 +275,10 @@ const industry = user.industries.industry;
                     marginBottom: 16,
                   }}>
                   <Text style={{ fontSize: 18, marginVertical: 5 }}>
-                  {user.email}
+                    {user?.email}
                   </Text>
                   <Text style={{ fontSize: 18, marginVertical: 5 }}>
-                  {user.phoneNumber}
+                    {user?.phoneNumber}
                   </Text>
                 </View>
                 <Card.Divider
@@ -302,7 +305,7 @@ const industry = user.industries.industry;
                         fontSize: 18,
                         fontWeight: 'normal',
                       }}>
-                      {user.years}
+                      {user?.years}
                     </Text>
                   </View>
                   <View
@@ -325,7 +328,7 @@ const industry = user.industries.industry;
                         fontSize: 18,
                         fontWeight: 'normal',
                       }}>
-                      {user.position.name}
+                      {user?.position.name}
                     </Text>
                   </View>
                   <View
@@ -500,25 +503,29 @@ const industry = user.industries.industry;
                         }}>
                         Basins
                       </Text>
-                        {getExperienceLocationBasins().length > 0 &&
+                      {getExperienceLocationBasins().length > 0 &&
                         getExperienceLocationBasins().map((b) => {
                           return (
                             <>
-                              <Text 
+                              <Text
                                 style={{
-                                fontSize: 18,
-                                fontWeight: 'normal',
-                            }}>{b.basinName}</Text>
+                                  fontSize: 18,
+                                  fontWeight: 'normal',
+                                }}>
+                                {b.basinName}
+                              </Text>
                             </>
-                          )
+                          );
                         })}
                       {!getExperienceLocationBasins().length && (
                         <>
                           <Text
                             style={{
-                            fontSize: 18,
-                            fontWeight: 'normal',
-                            }}>None</Text>
+                              fontSize: 18,
+                              fontWeight: 'normal',
+                            }}>
+                            None
+                          </Text>
                         </>
                       )}
                     </View>
@@ -537,25 +544,31 @@ const industry = user.industries.industry;
                         }}>
                         State
                       </Text>
-                        {getExperienceLocationStates().length > 0 &&
-                        getExperienceLocationStates().map((s: { stateName: React.ReactNode; }) => {
-                          return (
-                            <>
-                              <Text 
-                                style={{
-                                fontSize: 18,
-                                fontWeight: 'normal',
-                        }}>{s.stateName}</Text>
-                            </>
-                          )
-                        })}
+                      {getExperienceLocationStates().length > 0 &&
+                        getExperienceLocationStates().map(
+                          (s: { stateName: React.ReactNode }) => {
+                            return (
+                              <>
+                                <Text
+                                  style={{
+                                    fontSize: 18,
+                                    fontWeight: 'normal',
+                                  }}>
+                                  {s.stateName}
+                                </Text>
+                              </>
+                            );
+                          },
+                        )}
                       {!getExperienceLocationStates().length && (
                         <>
-                          <Text 
+                          <Text
                             style={{
-                            fontSize: 18,
-                            fontWeight: 'normal',
-                        }}>None</Text>
+                              fontSize: 18,
+                              fontWeight: 'normal',
+                            }}>
+                            None
+                          </Text>
                         </>
                       )}
                     </View>
@@ -573,25 +586,30 @@ const industry = user.industries.industry;
                           color: Colors.midBlue,
                         }}>
                         Counties
-                      </Text>                      
-                        {getExperienceLocationCounties().length > 0 &&
+                      </Text>
+                      {getExperienceLocationCounties().length > 0 &&
                         getExperienceLocationCounties().map((c) => {
                           return (
                             <>
-                            <Text
+                              <Text
                                 style={{
-                                fontSize: 18,
-                                fontWeight: 'normal',
-                                }}>{c.countyName}</Text>
+                                  fontSize: 18,
+                                  fontWeight: 'normal',
+                                }}>
+                                {c.countyName}
+                              </Text>
                             </>
-                          )
+                          );
                         })}
                       {!getExperienceLocationCounties().length && (
                         <>
-                          <Text style={{
-                                fontSize: 18,
-                                fontWeight: 'normal',
-                                }}>None</Text>
+                          <Text
+                            style={{
+                              fontSize: 18,
+                              fontWeight: 'normal',
+                            }}>
+                            None
+                          </Text>
                         </>
                       )}
                     </View>
@@ -715,7 +733,7 @@ const industry = user.industries.industry;
                           fontSize: 18,
                           fontWeight: 'normal',
                         }}>
-                        {user.generalHourRate}
+                        {user?.generalHourRate}
                       </Text>
                     </View>
                     <Text

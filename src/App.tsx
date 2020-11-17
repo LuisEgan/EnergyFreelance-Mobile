@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { Dispatch } from 'react';
 import { Provider, useDispatch } from 'react-redux';
 import { useStore } from './store/store';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { ThemeProvider } from 'react-native-elements';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator, DrawerItem, DrawerItemList, DrawerContentScrollView } from '@react-navigation/drawer';
+import {
+  createDrawerNavigator,
+  DrawerItem,
+  DrawerItemList,
+  DrawerContentScrollView,
+} from '@react-navigation/drawer';
 
 import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
@@ -15,12 +20,11 @@ import ThankYou from './components/Steps/ThankYou';
 import MyProfileScreen from './screens/MyProfileScreen';
 import screens from './constants/screens';
 
+import { logout, startAsyncCall, stopAsyncCall } from '../src/store/actions';
 import {
-  logout,
-  startAsyncCall,
-  stopAsyncCall,
-} from '../src/store/actions'
-import { ASYNC_STORAGE_USER } from './constants/asyncStorage';
+  ASYNC_STORAGE_REMEMBER_ME,
+  ASYNC_STORAGE_USER,
+} from './constants/asyncStorage';
 import { Alert, AsyncStorage } from 'react-native';
 
 declare const global: { HermesInternal: null | {} };
@@ -29,7 +33,7 @@ const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 const stepPagesStack = createStackNavigator();
 // const dispatch = useDispatch();
- //const navigation= useNavigation();
+//const navigation= useNavigation();
 
 const stepPages = () => (
   <stepPagesStack.Navigator
@@ -61,44 +65,41 @@ const stepPages = () => (
 const DrawerNavigator = () => {
   return (
     <React.Fragment>
-      <Drawer.Navigator 
-      drawerContent={props => <CustomDrawerContent {...props} />}
-      // initialRouteName={screens.main.MyProfile}
+      <Drawer.Navigator
+        drawerContent={(props) => <CustomDrawerContent {...props} />}
+        // initialRouteName={screens.main.MyProfile}
       >
         <Drawer.Screen
           name={screens.main.MyProfile}
           component={MyProfileScreen}
-        /> 
+        />
       </Drawer.Navigator>
-      
-  </React.Fragment> 
- );
+    </React.Fragment>
+  );
 };
 
-function CustomDrawerContent(props:any) {
+const CustomDrawerContent = (props: any) => {
+  const { navigate } = useNavigation();
+  const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    try {
+      dispatch(logout());
+      await AsyncStorage.removeItem(ASYNC_STORAGE_USER);
+      await AsyncStorage.removeItem(ASYNC_STORAGE_REMEMBER_ME);
+      navigate(screens.main.SignIn);
+    } catch (error) {
+      console.error('error: ', error);
+    }
+  };
+
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
-      <DrawerItem label="LogOut" onPress={() =>handleLogout() } />
+      <DrawerItem label="LogOut" onPress={() => handleLogout()} />
     </DrawerContentScrollView>
   );
-}
-
-const handleLogout = async () => {
-  await AsyncStorage.removeItem(ASYNC_STORAGE_USER);
-  setTimeout(() => {
-    //navigation.navigate(screens.main.SignIn);
-  }, 2000)
-  
-    // dispatch(startAsyncCall())
-    // dispatch(logout())    
-    //   try {
-    //       AsyncStorage.removeItem(ASYNC_STORAGE_USER);
-    //       navigate(screens.main.SignIn);
-    //   }
-    //   catch(exception) {
-    //   }  
-  }
+};
 
 const MainStackNavigator = () => (
   <Stack.Navigator initialRouteName={screens.main.SignIn} headerMode={'none'}>
