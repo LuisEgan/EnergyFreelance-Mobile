@@ -6,10 +6,10 @@ export default {
     ThankYou: 'ThankYou',
   },
   main: {
-    MyProfile: 'MyProfile',
-    SignIn: 'SignIn',
-    SignUp: 'SignUp',
+    MyProfile: 'My profile',
+    SignIn: 'Sign In',
+    SignUp: 'Sign Up',
     Steps: 'Steps',
-    LogOut: 'LogOut'
+    LogOut: 'Log out'
   },
 };

@@ -20,13 +20,13 @@ import {
   Button,
 } from 'react-native-elements';
 import LinearGradient from 'react-native-linear-gradient';
-
 import Colors from '../constants/colors';
 
 // @ts-ignore
 import exampleImage from '../assets/Energy_Freelance_vertical_white.png';
 import { useSelector } from 'react-redux';
 import { containsObject } from '../lib/locationController';
+import MainHeader from '../components/mainHeader';
 const exampleImageUri = RNImage.resolveAssetSource(exampleImage).uri;
 
 type FormData = {
@@ -113,7 +113,8 @@ const MyProfileScreen = ({ navigation }) => {
   return (
     <KeyboardAvoidingView
       style={{ flexGrow: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>        
+      <MainHeader navigation={navigation}/> 
       <View style={{ flex: 1, backgroundColor: Colors.midLightGray }}>
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"

@@ -11,6 +11,8 @@ import {
   DrawerContentScrollView,
 } from '@react-navigation/drawer';
 
+import { Header } from 'react-native-elements';
+import { View, Text, TouchableOpacity, Image } from 'react-native'
 import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import PersonalInformation from './components/Steps/PersonalInformation';
@@ -78,6 +80,22 @@ const DrawerNavigator = () => {
   );
 };
 
+const SecondaryDrawerNavigator = () => {
+  return (
+    <React.Fragment>
+      <Drawer.Navigator
+        drawerContent={(props: any) => <CustomDrawerContent {...props} />}
+        // initialRouteName={screens.main.MyProfile}
+      >
+        <Drawer.Screen
+          name={screens.main.MyProfile}
+          component={MyProfileScreen}
+        />
+      </Drawer.Navigator>
+    </React.Fragment>
+  );
+};
+
 const CustomDrawerContent = (props: any) => {
   const { navigate } = useNavigation();
   const dispatch = useDispatch();
@@ -89,14 +107,15 @@ const CustomDrawerContent = (props: any) => {
       await AsyncStorage.removeItem(ASYNC_STORAGE_REMEMBER_ME);
       navigate(screens.main.SignIn);
     } catch (error) {
-      console.error('error: ', error);
+      
     }
   };
 
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
-      <DrawerItem label="LogOut" onPress={() => handleLogout()} />
+      <DrawerItem label="Projects" onPress={() => props.navigation.openDrawer()} />
+      <DrawerItem label={screens.main.LogOut} onPress={() => handleLogout()} />
     </DrawerContentScrollView>
   );
 };
