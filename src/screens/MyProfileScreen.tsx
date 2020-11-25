@@ -150,7 +150,7 @@ const MyProfileScreen = ({ navigation }) => {
                   <TouchableOpacity>
                     <Text
                       style={{
-                        fontSize: 15,
+                        fontSize: 17,
                         fontWeight: 'bold',
                         textAlign: 'left',
                         color: Colors.white,
@@ -162,7 +162,7 @@ const MyProfileScreen = ({ navigation }) => {
                   <TouchableOpacity>
                     <Text
                       style={{
-                        fontSize: 15,
+                        fontSize: 17,
                         fontWeight: 'bold',
                         textAlign: 'left',
                         color: Colors.white,
@@ -174,7 +174,7 @@ const MyProfileScreen = ({ navigation }) => {
                   <TouchableOpacity>
                     <Text
                       style={{
-                        fontSize: 15,
+                        fontSize: 17,
                         fontWeight: 'bold',
                         textAlign: 'left',
                         color: Colors.white,
