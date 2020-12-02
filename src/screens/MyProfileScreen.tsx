@@ -135,7 +135,7 @@ const MyProfileScreen = ({ navigation }) => {
                   paddingLeft: 24,
                   marginVertical: 20,
                 }}>
-                My account
+                My Account
               </Text>
               <ScrollView
                 horizontal

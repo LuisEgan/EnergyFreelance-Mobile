@@ -16,6 +16,7 @@ import Input from '../Input';
 
 // @ts-ignore
 import trophyPlaceholder from '../../assets/trophy.png';
+import screens from '../../constants/screens';
 const trophyPlaceholderURI = RNImage.resolveAssetSource(trophyPlaceholder).uri;
 
 type FormData = {
@@ -137,7 +138,7 @@ const ThankYou = ({
                   title="Prev"
                 />
                 <Button
-                  onPress={() => navigation.navigate('MyProfile')}
+                  onPress={() => navigation.navigate(screens.main.SignIn)}
                   titleStyle={{ fontSize: 20, color: Colors.darkBlue }}
                   buttonStyle={{
                     backgroundColor: Colors.lightGreen,

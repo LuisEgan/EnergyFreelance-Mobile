@@ -208,7 +208,7 @@ const SignInScreen = () => {
                       textDecorationLine: 'underline',
                     }}
                     type={'clear'}
-                    onPress={() => navigate('SignUp')}
+                    onPress={() => navigate(screens.main.SignUp)}
                     title="Sign Up"
                   />
                 </View>
@@ -218,7 +218,7 @@ const SignInScreen = () => {
                     textDecorationLine: 'underline',
                   }}
                   type={'clear'}
-                  onPress={() => navigate('PasswordForgot')}
+                  // onPress={() => navigate('PasswordForgot')}
                   title="Forgot your password?"
                 />
               </View>
