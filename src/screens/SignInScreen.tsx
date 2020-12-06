@@ -77,7 +77,12 @@ const SignInScreen = () => {
       try {
         await AsyncStorage.setItem(ASYNC_STORAGE_USER, JSON.stringify(user));
         await AsyncStorage.setItem(ASYNC_STORAGE_REMEMBER_ME, `${rememberMe}`);
-        navigate(screens.main.MyProfile);
+        if(user.type===2){
+          
+          navigate(screens.main.MyWPProfile);
+        }else{
+          navigate(screens.main.MyProfile);
+        }        
       } catch (error) {
         console.error('error: ', error);
       }

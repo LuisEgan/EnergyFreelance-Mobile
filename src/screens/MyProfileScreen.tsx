@@ -58,7 +58,8 @@ const MyProfileScreen = ({ navigation }) => {
   );
 
   const buttons = [{ element: component1 }, { element: component2 }];
-  const industry = user?.industries.industry;
+  const industry = user?.industries?.industry;
+  
 
   const getExperienceLocationBasins = () => {
     let basins: any[] = [];

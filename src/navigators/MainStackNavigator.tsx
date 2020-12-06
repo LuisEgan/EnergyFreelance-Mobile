@@ -27,6 +27,7 @@ const MainStackNavigator = () => (
     options={{ title: 'Steps' }}
   />
   <Stack.Screen name={screens.main.MyProfile} component={DrawerNavigator} />
+  <Stack.Screen name={screens.main.MyWPProfile} component={DrawerNavigator} />
 </Stack.Navigator>
 );
 
