@@ -15,7 +15,6 @@ const StepsScreen = ({ navigation }) => {
   // const { control, handleSubmit, errors } = useForm<FormData>();
 
   // const onSubmit = (data: FormData) => {
-  //   console.log(data);
   //   Alert.alert('Form Data ', JSON.stringify(data));
   // };
 

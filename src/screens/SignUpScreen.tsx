@@ -44,7 +44,6 @@ const SignUpScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.root.authenticated);
   const user = useSelector((state) => state.root.user);
-  console.log('user: ', user);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const { control, handleSubmit, errors } = useForm<FormData>();

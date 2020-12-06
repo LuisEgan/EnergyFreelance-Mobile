@@ -3,8 +3,6 @@ import { request } from 'universal-rxjs-ajax';
 import { API_URL as ENV_API } from '../../env.json';
 import { FREELANCER } from '../lib/types';
 
-console.log('ENV API URL ------->   ', ENV_API);
-
 const API_URL_CREATE_USERS = `${ENV_API}/CreateUsers`;
 const API_UPDATE_EMAILS_FL = `${ENV_API}/UpdateEmailFreelance`;
 const API_UPDATE_EMAILS_WP = `${ENV_API}/UpdateEmailWorkProvider`;
@@ -58,7 +56,6 @@ export function authUserByType(action) {
 export function createUser(action: any) {
   const { type } = action.payload;
   const url = API_URL_CREATE_USERS;
-  console.log('url: ', url);
 
   return request({
     url,
@@ -75,7 +72,6 @@ export function createUser(action: any) {
 export function createProfile(action) {
   const { data, type } = action.payload;
   const url = type === FREELANCER ? API_URL_FREELANCER : API_URL_WORKPROVIDER;
-  console.log('ACT-->> ', action);
   return request({
     url,
     method: 'POST',
@@ -142,8 +138,6 @@ export function updateProjectStatus(action) {
 
   const url = API_UPDATE_PROJECT_STATUS;
 
-  console.log('REQUEST UPDATE STATUS:', JSON.stringify({ status, projectId }));
-
   return request({
     url,
     method: 'PUT',
@@ -189,8 +183,6 @@ export function getApplications(action) {
   const { freelancerId } = action.payload;
 
   const url = API_GET_APPLICATIONS + `/${freelancerId}`;
-
-  console.log('REQUEST APPLICATIONS DATA:', freelancerId);
 
   return request({
     url,

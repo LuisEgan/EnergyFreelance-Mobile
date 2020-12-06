@@ -57,9 +57,6 @@ export const getBasins = (locations) => {
 
 export const getCountiesByState = (locations, state) => {
   let counties = [];
-
-  console.log(locations);
-
   if (locations === undefined) {
     return counties;
   }

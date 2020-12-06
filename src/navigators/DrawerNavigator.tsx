@@ -15,8 +15,10 @@ import {
 import screens from '../constants/screens';
 import MyProfileScreen from '../screens/MyProfileScreen';
 import { logout } from '../store/actions';
-import { Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import CustomDrawerList from '../components/CustomDrawerList'; 
+import Colors from '../constants/colors';
 
 const Drawer = createDrawerNavigator();
 
@@ -58,19 +60,29 @@ const CustomDrawerContent = (props: any) => {
             top: 0,
             zIndex: 1,
             elevation: 1,
-            height: 600,
-            width: 200,
-            backgroundColor: 'red',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text>DICKS</Text>
-
-          <TouchableOpacity
-            onPress={() => setProjectsDrawerShow(false)}
-            style={{ height: 50, width: 50, backgroundColor: 'blue' }}>
-            <Text>Close!</Text>
-          </TouchableOpacity>
+            height: "100%",
+            width: 280,
+            backgroundColor: 'white',
+            justifyContent: 'space-evenly',
+          }}>  
+          
+          <Text style={{  
+                    left: 30,
+                    top: 80,   
+                }}
+                onPress={() => setProjectsDrawerShow(false)}>
+                Main Menu
+            <TouchableOpacity
+              onPress={() => setProjectsDrawerShow(false)}>
+                  <Image style={{  
+                      left: -200, 
+                      width: 700,
+                      height: 15, 
+                      resizeMode: 'contain',
+                  }}source={require('../assets/backArrow.png')} />            
+            </TouchableOpacity> 
+          </Text>          
+          <CustomDrawerList/>          
         </View>
       )}
     </>
@@ -78,15 +90,20 @@ const CustomDrawerContent = (props: any) => {
 };
 
 const DrawerNavigator = () => {
-  return (
+  
+  return (    
     <Drawer.Navigator
+    drawerStyle={{
+      backgroundColor: Colors.white, 
+    }}
       drawerContent={(props) => <CustomDrawerContent {...props} />}
-      // initialRouteName={screens.main.MyProfile}
-    >
-      <Drawer.Screen
+      
+    > 
+    
+    <Drawer.Screen      
         name={screens.main.MyProfile}
         component={MyProfileScreen}
-      />
+      />      
     </Drawer.Navigator>
   );
 };

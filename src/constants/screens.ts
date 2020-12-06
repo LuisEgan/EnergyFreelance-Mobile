@@ -6,7 +6,8 @@ export default {
     ThankYou: 'ThankYou',
   },
   main: {
-    MyProfile: 'My profile',
+    MyProfile: 'My Account',
+    MyWPProfile: 'My Profile',
     SignIn: 'Sign In',
     SignUp: 'Sign Up',
     Steps: 'Steps',

@@ -77,7 +77,12 @@ const SignInScreen = () => {
       try {
         await AsyncStorage.setItem(ASYNC_STORAGE_USER, JSON.stringify(user));
         await AsyncStorage.setItem(ASYNC_STORAGE_REMEMBER_ME, `${rememberMe}`);
-        navigate(screens.main.MyProfile);
+        if(user.type===2){
+          
+          navigate(screens.main.MyWPProfile);
+        }else{
+          navigate(screens.main.MyProfile);
+        }        
       } catch (error) {
         console.error('error: ', error);
       }
@@ -208,7 +213,7 @@ const SignInScreen = () => {
                       textDecorationLine: 'underline',
                     }}
                     type={'clear'}
-                    onPress={() => navigate('SignUp')}
+                    onPress={() => navigate(screens.main.SignUp)}
                     title="Sign Up"
                   />
                 </View>
@@ -218,7 +223,7 @@ const SignInScreen = () => {
                     textDecorationLine: 'underline',
                   }}
                   type={'clear'}
-                  onPress={() => navigate('PasswordForgot')}
+                  // onPress={() => navigate('PasswordForgot')}
                   title="Forgot your password?"
                 />
               </View>
