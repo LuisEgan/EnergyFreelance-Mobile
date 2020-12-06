@@ -15,10 +15,11 @@ import {
 import screens from '../constants/screens';
 import MyProfileScreen from '../screens/MyProfileScreen';
 import { logout } from '../store/actions';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import CustomDrawerList from '../components/CustomDrawerList'; 
+import CustomDrawerList from '../components/CustomDrawerList';
 import Colors from '../constants/colors';
+import MyWPProfileScreen from '../screens/MyWPProfileScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -60,29 +61,31 @@ const CustomDrawerContent = (props: any) => {
             top: 0,
             zIndex: 1,
             elevation: 1,
-            height: "100%",
+            height: '100%',
             width: 280,
             backgroundColor: 'white',
             justifyContent: 'space-evenly',
-          }}>  
-          
-          <Text style={{  
-                    left: 30,
-                    top: 80,   
+          }}>
+          <Text
+            style={{
+              left: 30,
+              top: 80,
+            }}
+            onPress={() => setProjectsDrawerShow(false)}>
+            Main Menu
+            <TouchableOpacity onPress={() => setProjectsDrawerShow(false)}>
+              <Image
+                style={{
+                  left: -200,
+                  width: 700,
+                  height: 15,
+                  resizeMode: 'contain',
                 }}
-                onPress={() => setProjectsDrawerShow(false)}>
-                Main Menu
-            <TouchableOpacity
-              onPress={() => setProjectsDrawerShow(false)}>
-                  <Image style={{  
-                      left: -200, 
-                      width: 700,
-                      height: 15, 
-                      resizeMode: 'contain',
-                  }}source={require('../assets/backArrow.png')} />            
-            </TouchableOpacity> 
-          </Text>          
-          <CustomDrawerList/>          
+                source={require('../assets/backArrow.png')}
+              />
+            </TouchableOpacity>
+          </Text>
+          <CustomDrawerList />
         </View>
       )}
     </>
@@ -90,20 +93,20 @@ const CustomDrawerContent = (props: any) => {
 };
 
 const DrawerNavigator = () => {
-  
-  return (    
+  return (
     <Drawer.Navigator
-    drawerStyle={{
-      backgroundColor: Colors.white, 
-    }}
-      drawerContent={(props) => <CustomDrawerContent {...props} />}
-      
-    > 
-    
-    <Drawer.Screen      
+      drawerStyle={{
+        backgroundColor: Colors.white,
+      }}
+      drawerContent={(props) => <CustomDrawerContent {...props} />}>
+      <Drawer.Screen
+        name={screens.main.MyWPProfile}
+        component={MyWPProfileScreen}
+      />
+      <Drawer.Screen
         name={screens.main.MyProfile}
         component={MyProfileScreen}
-      />      
+      />
     </Drawer.Navigator>
   );
 };
