@@ -12,15 +12,15 @@ import { Button, ButtonGroup, Image, Text } from 'react-native-elements';
 import LinearGradient from 'react-native-linear-gradient';
 import { useForm, Controller } from 'react-hook-form';
 
-import { startAsyncCall, fetchUser } from '../store/actions';
-import Colors from '../constants/colors';
-import Input from '../components/Input';
+import { startAsyncCall, fetchUser } from '../../store/actions';
+import Colors from '../../constants/colors';
+import Input from '../../components/Input';
 
 // @ts-ignore
 import exampleImage from '../assets/Energy_Freelance_vertical_white.png';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ASYNC_STORAGE_USER } from '../constants/asyncStorage';
-import screens from '../constants/screens';
+import { ASYNC_STORAGE_USER } from '../../constants/asyncStorage';
+import screens from '../../constants/screens';
 import { useNavigation } from '@react-navigation/native';
 const exampleImageUri = RNImage.resolveAssetSource(exampleImage).uri;
 

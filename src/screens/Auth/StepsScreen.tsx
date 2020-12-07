@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Alert, KeyboardAvoidingView, Platform } from 'react-native';
 
-import PersonalInformation from '../components/Steps/PersonalInformation';
-import WorkInformation from '../components/Steps/Workinformation';
+import PersonalInformation from '../../components/Steps/PersonalInformation';
+import WorkInformation from '../../components/Steps/Workinformation';
 
 type FormData = {
   email: string;

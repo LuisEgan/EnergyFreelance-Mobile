@@ -1,8 +1,8 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import screens from '../constants/screens';
-import SignInScreen from '../screens/SignInScreen';
-import SignUpScreen from '../screens/SignUpScreen';
+import screens from '../../constants/screens';
+import SignInScreen from '../../screens/Auth/SignInScreen';
+import SignUpScreen from '../../screens/Auth/SignUpScreen';
 import DrawerNavigator from './DrawerNavigator';
 import StepPagesNavigator from './StepPagesNavigator';
 import { LinearGradient } from 'react-native-linear-gradient';

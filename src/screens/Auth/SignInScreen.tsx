@@ -12,19 +12,19 @@ import { Button, Image, Text, CheckBox } from 'react-native-elements';
 import LinearGradient from 'react-native-linear-gradient';
 import { useForm, Controller } from 'react-hook-form';
 
-import Colors from '../constants/colors';
-import Input from '../components/Input';
+import Colors from '../../constants/colors';
+import Input from '../../components/Input';
 
 // @ts-ignore
 import exampleImage from '../assets/Energy_Freelance_vertical_white.png';
 import { useNavigation } from '@react-navigation/native';
-import screens from '../constants/screens';
+import screens from '../../constants/screens';
 import { useDispatch, useSelector } from 'react-redux';
-import { authUser, startAsyncCall } from '../store/actions';
+import { authUser, startAsyncCall } from '../../store/actions';
 import {
   ASYNC_STORAGE_REMEMBER_ME,
   ASYNC_STORAGE_USER,
-} from '../constants/asyncStorage';
+} from '../../constants/asyncStorage';
 import { clockRunning } from 'react-native-reanimated';
 const exampleImageUri = RNImage.resolveAssetSource(exampleImage).uri;
 
@@ -77,8 +77,7 @@ const SignInScreen = () => {
       try {
         await AsyncStorage.setItem(ASYNC_STORAGE_USER, JSON.stringify(user));
         await AsyncStorage.setItem(ASYNC_STORAGE_REMEMBER_ME, `${rememberMe}`);
-        if(user.type===2){
-          
+        if(user.type===2){          
           navigate(screens.main.MyWPProfile);
         }else{
           navigate(screens.main.MyProfile);
