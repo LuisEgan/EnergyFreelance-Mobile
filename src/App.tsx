@@ -11,12 +11,12 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <NavigationContainer>
+      {/* <NavigationContainer> */}
         <ThemeProvider>
           <Router />
           {/* <MainStackNavigator /> */}
         </ThemeProvider>
-      </NavigationContainer>
+      {/* </NavigationContainer> */}
     </Provider>
   );
 };

@@ -17,7 +17,7 @@ import Colors from '../../constants/colors';
 import Input from '../../components/Input';
 
 // @ts-ignore
-import exampleImage from '../assets/Energy_Freelance_vertical_white.png';
+import exampleImage from '../../assets/Energy_Freelance_vertical_white.png';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ASYNC_STORAGE_USER } from '../../constants/asyncStorage';
 import screens from '../../constants/screens';

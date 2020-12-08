@@ -23,7 +23,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Colors from '../../constants/colors';
 
 // @ts-ignore
-import exampleImage from '../assets/Energy_Freelance_vertical_white.png';
+import exampleImage from '../assets/../Energy_Freelance_vertical_white.png';
 import { useSelector } from 'react-redux';
 import { containsObject } from '../../lib/locationController';
 import MainHeader from '../../components/mainHeader';

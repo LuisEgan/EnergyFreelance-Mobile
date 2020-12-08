@@ -79,7 +79,7 @@ const CustomDrawerContent = (props: any) => {
                       width: 700,
                       height: 15, 
                       resizeMode: 'contain',
-                  }}source={require('../assets/backArrow.png')} />            
+                  }}source={require('../../assets/backArrow.png')} />            
             </TouchableOpacity> 
           </Text>          
           <CustomDrawerList/>          

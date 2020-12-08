@@ -35,7 +35,9 @@ const CustomDrawerContent = (props: any) => {
       await AsyncStorage.removeItem(ASYNC_STORAGE_USER);
       await AsyncStorage.removeItem(ASYNC_STORAGE_REMEMBER_ME);
       navigate(screens.main.SignIn);
-    } catch (error) {}
+    } catch (error) {
+      console.log('error: ', error);      
+    }
   };
 
   return (
@@ -80,7 +82,7 @@ const CustomDrawerContent = (props: any) => {
                       width: 700,
                       height: 15, 
                       resizeMode: 'contain',
-                  }}source={require('../assets/backArrow.png')} />            
+                  }}source={require('../../assets/backArrow.png')} />            
             </TouchableOpacity> 
           </Text>          
           <CustomDrawerList/>          

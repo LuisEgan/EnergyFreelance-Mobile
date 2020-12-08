@@ -16,7 +16,7 @@ import Colors from '../../constants/colors';
 import Input from '../../components/Input';
 
 // @ts-ignore
-import exampleImage from '../assets/Energy_Freelance_vertical_white.png';
+import exampleImage from '../../assets/Energy_Freelance_vertical_white.png';
 import { useNavigation } from '@react-navigation/native';
 import screens from '../../constants/screens';
 import { useDispatch, useSelector } from 'react-redux';
