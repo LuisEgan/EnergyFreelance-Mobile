@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   ScrollView,
   View,
@@ -7,56 +6,89 @@ import {
   Image as RNImage,
   StyleSheet,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { Button, ButtonGroup, Image, Text } from 'react-native-elements';
+import { Button, Image, Text, CheckBox } from 'react-native-elements';
 import LinearGradient from 'react-native-linear-gradient';
 import { useForm, Controller } from 'react-hook-form';
 
-import { startAsyncCall, fetchUser } from '../store/actions';
-import Colors from '../constants/colors';
-import Input from '../components/Input';
+import Colors from '../../constants/colors';
+import Input from '../../components/Input';
 
 // @ts-ignore
-import exampleImage from '../assets/Energy_Freelance_vertical_white.png';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ASYNC_STORAGE_USER } from '../constants/asyncStorage';
-import screens from '../constants/screens';
+import exampleImage from '../../assets/Energy_Freelance_vertical_white.png';
 import { useNavigation } from '@react-navigation/native';
+import screens from '../../constants/screens';
+import { useDispatch, useSelector } from 'react-redux';
+import { authUser, startAsyncCall } from '../../store/actions';
+import {
+  ASYNC_STORAGE_REMEMBER_ME,
+  ASYNC_STORAGE_USER,
+} from '../../constants/asyncStorage';
+import { AuthContext } from '../../context/AuthContext';
 const exampleImageUri = RNImage.resolveAssetSource(exampleImage).uri;
 
 type FormData = {
-  type: number;
   email: string;
   password: string;
-  confirmPassword: string;
+  rememberMe: boolean;
 };
 
-type UserData = {
-  type: number;
-  email: string;
-  password: string;
-  status: string;
-  isgoogle: string;
-};
-
-const SignUpScreen = ({ navigation }) => {
+const SignInScreen = () => {
   const { navigate } = useNavigation();
   const dispatch = useDispatch();
-  const auth = useSelector((state) => state.root.authenticated);
-  const user = useSelector((state) => state.root.user);
 
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const { control, handleSubmit, errors } = useForm<FormData>();
+  const { signIn } = useContext(AuthContext);
+
+  const { control, handleSubmit, register, setValue } = useForm<FormData>();
+
+  const auth = useSelector((state: any) => state?.root.authenticated);
+  const user = useSelector((state: any) => state?.root.user);
+  const asyncCallInProgress = useSelector(
+    (state: any) => state?.root.asyncCallInProgress,
+  );
+  const [rememberMe, setRememberMe] = useState<boolean>(false);
+
+  // * Check if automatic sign in
+  useEffect(() => {
+    const check = async () => {
+      try {
+        const remembered = await AsyncStorage.getItem(
+          ASYNC_STORAGE_REMEMBER_ME,
+        );
+
+        if (remembered === 'true') {
+          // dispatch(authUser(data));
+        }
+      } catch (error) {
+        console.error('error: ', error);
+      }
+
+      check();
+    };
+  }, []);
+
+  // * Register fields
+  useEffect(() => {
+    register('rememberMe');
+  }, []);
 
   // * Redirect on auth
   useEffect(() => {
     const doSignIn = async () => {
       try {
-        await AsyncStorage.setItem(ASYNC_STORAGE_USER, JSON.stringify(user));
+        const userJSON = JSON.stringify(user);
+        signIn(userJSON);
+        await AsyncStorage.setItem(ASYNC_STORAGE_USER, userJSON);
+        await AsyncStorage.setItem(ASYNC_STORAGE_REMEMBER_ME, `${rememberMe}`);
 
         setTimeout(() => {
-          navigate(screens.main.MyProfile);
-        }, 2000);
+          if (user.type === 2) {
+            navigate(screens.main.MyWPProfile);
+          } else {
+            navigate(screens.main.MyProfile);
+          }
+        }, 0);
       } catch (error) {
         console.error('error: ', error);
       }
@@ -67,30 +99,10 @@ const SignUpScreen = ({ navigation }) => {
     }
   }, [auth]);
 
-  const onSubmit = (data: FormData) => {
-    let userType = selectedIndex + 1;
-    let newUser: UserData = {
-      email: data.email,
-      type: userType,
-      password: data.password,
-      status: '0',
-      isgoogle: 'False',
-    };
+  const onSubmit = async (data: FormData) => {
     dispatch(startAsyncCall());
-    dispatch(fetchUser(newUser));
+    dispatch(authUser(data));
   };
-
-  const updateIndex = (index: number) => {
-    setSelectedIndex(index);
-  };
-
-  const component1 = () => (
-    <Text style={{ fontSize: 20, color: Colors.darkBlue }}>Get Hired</Text>
-  );
-  const component2 = () => (
-    <Text style={{ fontSize: 20, color: Colors.darkBlue }}>Hire</Text>
-  );
-  const buttons = [{ element: component1 }, { element: component2 }];
 
   return (
     <LinearGradient
@@ -121,36 +133,7 @@ const SignUpScreen = ({ navigation }) => {
               />
             </View>
             <View style={styles.sectionContainer}>
-              <Text
-                style={{
-                  color: Colors.white,
-                  fontWeight: 'bold',
-                  fontSize: 24,
-                  textAlign: 'center',
-                  marginBottom: 10,
-                }}>
-                Join EnergyFreelance
-              </Text>
-              <Text style={styles.sectionTitle}>
-                Tell us, how you want to work?
-              </Text>
-              <View style={{ flex: 1, marginBottom: 20 }}>
-                <ButtonGroup
-                  onPress={updateIndex}
-                  selectedIndex={selectedIndex}
-                  buttons={buttons}
-                  containerStyle={{
-                    height: 60,
-                    borderWidth: 0,
-                    width: '100%',
-                    marginLeft: -1,
-                  }}
-                  selectedButtonStyle={{
-                    backgroundColor: Colors.lightBlue,
-                  }}
-                  innerBorderStyle={{ color: Colors.lightBlue }}
-                />
-              </View>
+              <Text style={styles.sectionTitle}>Log In and get to work</Text>
               <Controller
                 name="email"
                 defaultValue=""
@@ -177,19 +160,32 @@ const SignUpScreen = ({ navigation }) => {
                   />
                 )}
               />
-              <Controller
-                name="confirmPassword"
-                defaultValue=""
-                control={control}
-                render={(props) => (
-                  <Input
-                    {...props}
-                    onChangeText={(value) => props.onChange(value)}
-                    placeholder="Confirm Password"
-                    secureTextEntry={true}
-                  />
-                )}
-              />
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginTop: 10,
+                  marginBottom: 30,
+                }}>
+                <CheckBox
+                  checked={rememberMe}
+                  onPress={() => {
+                    setRememberMe(!rememberMe);
+                    setValue('rememberMe', !rememberMe);
+                  }}
+                  size={30}
+                />
+
+                <Text
+                  style={{
+                    fontSize: 20,
+                    color: Colors.white,
+                    marginLeft: 20,
+                  }}>
+                  Remember Me
+                </Text>
+              </View>
 
               <Button
                 onPress={handleSubmit(onSubmit)}
@@ -199,7 +195,7 @@ const SignUpScreen = ({ navigation }) => {
                   paddingVertical: 16,
                   marginBottom: 20,
                 }}
-                title="Sign Up"
+                title={asyncCallInProgress ? 'Loading..' : 'Log In'}
               />
               <Button
                 type="outline"
@@ -213,35 +209,29 @@ const SignUpScreen = ({ navigation }) => {
                 title="or continue with Gmail"
               />
               <View style={{ flex: 1 }}>
-                <View
-                  style={{
-                    flex: 1,
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginTop: 30,
-                    marginBottom: 20,
-                  }}>
-                  <Text style={styles.sectionBottom}>Already a member?</Text>
+                <View style={styles.newEnergyContainer}>
+                  <Text style={styles.sectionBottom}>
+                    New to Energy Freelance?
+                  </Text>
                   <Button
                     titleStyle={{
                       color: Colors.lightGreen,
                       textDecorationLine: 'underline',
                     }}
                     type={'clear'}
-                    onPress={() => navigate(screens.main.SignIn)}
-                    title="Log In"
-                  />
-                  <Button
-                    titleStyle={{
-                      color: Colors.lightGreen,
-                      textDecorationLine: 'underline',
-                    }}
-                    type={'clear'}
-                    onPress={() => navigate(screens.main.Steps)}
-                    title="Steps"
+                    onPress={() => navigate(screens.main.SignUp)}
+                    title="Sign Up"
                   />
                 </View>
+                <Button
+                  titleStyle={{
+                    color: Colors.lightGreen,
+                    textDecorationLine: 'underline',
+                  }}
+                  type={'clear'}
+                  // onPress={() => navigate('PasswordForgot')}
+                  title="Forgot your password?"
+                />
               </View>
             </View>
           </View>
@@ -258,7 +248,9 @@ const styles = StyleSheet.create({
   body: {
     backgroundColor: 'transparent',
   },
+
   linearGradient: { flex: 1 },
+
   sectionContainer: {
     marginTop: 32,
     paddingHorizontal: 24,
@@ -293,6 +285,14 @@ const styles = StyleSheet.create({
   highlight: {
     fontWeight: '700',
   },
+
+  newEnergyContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 30,
+  },
 });
 
-export default SignUpScreen;
+export default SignInScreen;

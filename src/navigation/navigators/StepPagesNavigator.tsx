@@ -1,10 +1,10 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import Experience from '../components/Steps/Experience';
-import PersonalInformation from '../components/Steps/PersonalInformation';
-import ThankYou from '../components/Steps/ThankYou';
-import WorkInformation from '../components/Steps/Workinformation';
-import screens from '../constants/screens';
+import Experience from '../../components/Steps/Experience';
+import PersonalInformation from '../../components/Steps/PersonalInformation';
+import ThankYou from '../../components/Steps/ThankYou';
+import WorkInformation from '../../components/Steps/Workinformation';
+import screens from '../../constants/screens';
 
 const StepPagesStack = createStackNavigator();
 
